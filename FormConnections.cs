@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.IO;
 using dbShowDepends.Data;
+using dbShowDepends.Settings;
 
 namespace dbShowDepends
 {
@@ -12,12 +13,10 @@ namespace dbShowDepends
 
         XmlSerializer xmlser = new XmlSerializer(typeof(SetupConnectionCollection));
         //const string strFilter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
-        string settingsFileName = "connections.xml";
 
-        public FormConnections(string _settingsFilename)
+        public FormConnections()
         {
             InitializeComponent();
-            settingsFileName = _settingsFilename;
 
             bsConnections.DataSource = typeof(SetupConnectionCollection);
             bsConnections.DataMember = "Connections";
@@ -34,25 +33,20 @@ namespace dbShowDepends
         }
 
         /// <summary>
-        /// Загрузить настройки из файла
+        /// Загрузить настройки соединений
         /// </summary>
-        /// <param name="fileName">Имя файла</param>
-        public void LoadSettings(string fileName)
+        public void LoadSettings()
         {
-            StreamReader sr = new StreamReader(fileName);
-            bsConnections.DataSource = xmlser.Deserialize(sr);
-            sr.Close();
+            string path = Application.StartupPath;
+            SetupConnectionCollection col = SettingLayer.LoadSetupConnectionCollection(path);
+            bsConnections.DataSource = col;
         }
 
         /// <summary>
-        /// Сохранить настройки в файл
+        /// Сохранить настройки соединений
         /// </summary>
-        /// <param name="fileName">Имя файла</param>
-        public void SaveSettings(string fileName)
+        public void SaveSettings()
         {
-            if (string.IsNullOrEmpty(fileName))
-                fileName = settingsFileName;
-
             //prepare array
             SetupConnectionCollection cc = new SetupConnectionCollection();
             cc.Connections = new List<SetupConnection>();
@@ -62,9 +56,8 @@ namespace dbShowDepends
             }
 
             //save array
-            StreamWriter sw = new StreamWriter(fileName);
-            xmlser.Serialize(sw, cc);
-            sw.Close();
+            string path = Application.StartupPath;
+            SettingLayer.SaveSetupConnectionCollection(path, cc);
         }
 
         /// <summary>
@@ -73,10 +66,7 @@ namespace dbShowDepends
         /// <returns>Коллекция соединений</returns>
         public SetupConnectionCollection ConnectionCollectionGet()
         {
-            if (string.IsNullOrEmpty(settingsFileName))
-                return null;
-
-            LoadSettings(settingsFileName);
+            LoadSettings();
 
             //prepare array
             SetupConnectionCollection cc = new SetupConnectionCollection();
@@ -114,36 +104,17 @@ namespace dbShowDepends
         private void FormConnections_FormClosing(object sender, FormClosingEventArgs e)
         {
             bsConnections.EndEdit();
-            if (!string.IsNullOrEmpty(settingsFileName))
-            {
-                //if (MessageBox.Show("Save changes?", "Question", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                if (1==1)
-                {
-                    string setupFile;
-                    setupFile = Application.StartupPath + "\\" + settingsFileName;
-                    SaveSettings(setupFile);
-                    DialogResult = DialogResult.Yes;
-                }
-                else
-                {
-                    DialogResult = DialogResult.No;
-                }
-            }
-            else
-            {
-                this.DialogResult = DialogResult.No;
-            }
+
+            //string setupFile;
+            //setupFile = Application.StartupPath + "\\" + settingsFileName;
+            SaveSettings();
+            DialogResult = DialogResult.Yes;
 
         }
 
         private void FormConnections_Load(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(settingsFileName))
-            {
-                LoadSettings(settingsFileName);
-            }
+            LoadSettings();
         }
-
-        
     }
 }

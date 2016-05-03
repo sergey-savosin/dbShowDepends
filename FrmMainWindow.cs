@@ -7,6 +7,7 @@ using System.Data.Common;
 using System.Diagnostics;
 using FastColoredTextBoxNS;
 using dbShowDepends.Data;
+using dbShowDepends.Settings;
 
 namespace dbShowDepends
 {
@@ -403,7 +404,7 @@ namespace dbShowDepends
         {
             DialogResult res;
 
-            var f = new FormConnections("connections.xml");
+            var f = new FormConnections();
             res = f.ShowDialog(this);
             if (res == DialogResult.Yes)
             {
@@ -415,7 +416,7 @@ namespace dbShowDepends
 
         private void LoadBsConnections()
         {
-            var f = new FormConnections("connections.xml");
+            var f = new FormConnections();
             connectionCollection = f.ConnectionCollectionGet();
 
 

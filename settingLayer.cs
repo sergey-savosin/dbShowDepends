@@ -1,15 +1,52 @@
 ﻿using System;
 using Microsoft.Win32;
+using dbShowDepends.Data;
+using System.IO;
+using System.Xml.Serialization;
+using System.Diagnostics;
 
-namespace dbShowDepends
+namespace dbShowDepends.Settings
 {
     class SettingLayer
     {
         //корневой путь к настройкам в реестре
         const string RegistryRoot = @"HKEY_CURRENT_USER\Software\LK\DBShowDepends";
         const string OcsBranch = @"\DBSettings";
+        const string settingsFileName = "connections.xml";
+
+        public static SetupConnectionCollection LoadSetupConnectionCollection(string path)
+        {
+            Debug.Assert(!string.IsNullOrWhiteSpace(path));
+            string fullFileName = path + "\\" + settingsFileName;
+
+            // Создание пустого файла настроек
+            if (!File.Exists(fullFileName))
+            {
+                SetupConnectionCollection colTmp = new SetupConnectionCollection();
+                SaveSetupConnectionCollection(path, colTmp);
+            }
+
+            XmlSerializer xmlser = new XmlSerializer(typeof(SetupConnectionCollection));
+            StreamReader sr = new StreamReader(fullFileName);
+            SetupConnectionCollection col = (SetupConnectionCollection)xmlser.Deserialize(sr);
+            sr.Close();
+
+            return col;
+        }
+
+        public static void SaveSetupConnectionCollection(string path, SetupConnectionCollection col)
+        {
+            Debug.Assert(!string.IsNullOrWhiteSpace(path));
+            string fullFileName = path + "\\" + settingsFileName;
+
+            XmlSerializer xmlser = new XmlSerializer(typeof(SetupConnectionCollection));
+            StreamWriter sw = new StreamWriter(fullFileName);
+            xmlser.Serialize(sw, col);
+            sw.Close();
+        }
 
         // генерирует исключение в случае ошибки
+        [Obsolete]
         public static void SaveDbParams (DbParams par)
         {
             const string regPath = RegistryRoot + OcsBranch + "\\" + "default";
@@ -29,6 +66,7 @@ namespace dbShowDepends
         }
 
         // генерирует исключение в случае ошибки
+        [Obsolete]
         public static DbParams LoadDefaultParams()
         {
             const string regPath = RegistryRoot + OcsBranch + "\\" + "default";
