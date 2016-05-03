@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="changeDB" xml:space="preserve">
+    <value>use &lt;DB&gt;;</value>
+    <comment>changeDB</comment>
+  </data>
+  <data name="databaseList" xml:space="preserve">
+    <value>select d.name
+from sys.databases d
+order by d.name;</value>
+    <comment>databaseList</comment>
+  </data>
+  <data name="findReferencedObjs" xml:space="preserve">
+    <value>--declare @ObjectName sysname = 'dbo.korm_Request_CheckBusinessLogic';
+
+if object_id('tempdb..#weakObj') is null
+	create table #weakObj (objName sysname not null);
+
+IF EXISTS (
+    select 1
+    from #weakObj w
+    where w.objName = @ObjectName
+)
+BEGIN
+  SELECT '&lt;not avaible: weak object&gt;' refName;
+END
+ELSE
+BEGIN
+  SELECT DISTINCT
+    ISNULL(re.referenced_schema_name, 'dbo')
+    + '.'
+    + re.referenced_entity_name
+    + ISNULL('.' + re.referenced_minor_name, '') refName
+  , re.referenced_database_name refDbName
+  , o.[type]
+  FROM sys.dm_sql_referenced_entities(@ObjectName, 'object') re
+  LEFT JOIN sys.objects o
+     ON o.[object_id] = re.referenced_id
+  WHERE re.referenced_minor_id = 0;
+END;</value>
+    <comment>поиск содержащихся объектов</comment>
+  </data>
+  <data name="getDbName" xml:space="preserve">
+    <value>select db_name();</value>
+    <comment>Имя текущей БД</comment>
+  </data>
+  <data name="objectList" xml:space="preserve">
+    <value>select SCHEMA_NAME(o.schema_id) + '.'+ OBJECT_NAME(o.object_id) FullName
+, DB_NAME() DatabaseName
+, o.type
+, o.type_desc
+, o.modify_date
+from sys.objects o
+where o.name like '%' + isnull(@SearchName,'') + '%'
+  AND o.type not in ('S', 'IT', 'SQ')
+  AND o.type IN (&lt;objTypes&gt;)
+order by FullName;</value>
+    <comment>objectList</comment>
+  </data>
+  <data name="prepareWeakObjects" xml:space="preserve">
+    <value>-- поиск "плохих" объектов
+-- (на которые нельзя найти ссылки)
+
+set nocount on;
+
+if OBJECT_ID('tempdb..#weakObj') is not null
+  drop table #weakObj;
+create table #weakObj (objId int primary key, objName varchar(100) not null);
+
+declare @objId int, @objName sysname;
+declare @res table (r int not null);
+
+declare cr cursor local
+for
+  select o.object_id objId
+  , OBJECT_SCHEMA_NAME(o.object_id, DB_ID()) + '.' + o.name objName
+  from sys.all_objects o
+  where o.type in ('u', 'f', 'fn', 'p');
+
+open cr;
+
+while 1=1
+begin
+  fetch cr into @objId, @objName;
+  if @@FETCH_STATUS&lt;&gt;0
+    break;
+
+  begin try
+  
+  insert @res(r)
+  select 1
+  from sys.dm_sql_referenced_entities(@objName, 'object') re;
+  
+  end try
+  begin catch
+    print @objName + ' (' + cast(@objId as varchar(50)) + ')';
+    print error_message();
+    
+
+    insert #weakObj (objId, objName)
+    values (@objId, @objName);
+
+  end catch
+end;
+
+close cr;
+deallocate cr;</value>
+    <comment>prepareWeakObjects</comment>
+  </data>
+  <data name="showSource" xml:space="preserve">
+    <value>SELECT sm.object_id
+, object_schema_name(sm.object_id) + '.' + OBJECT_NAME(sm.object_id) AS object_name
+, o.type
+, o.type_desc
+, sm.definition
+FROM sys.sql_modules AS sm
+JOIN sys.objects AS o ON sm.object_id = o.object_id
+where sm.object_id = object_id(@ObjectName)</value>
+    <comment>Отображение текста объекта</comment>
+  </data>
+  <data name="tempTableId" xml:space="preserve">
+    <value>select OBJECT_ID('tempdb..#weakObj')</value>
+    <comment>Проверка на наличие рабочей таблицы</comment>
+  </data>
+</root>
