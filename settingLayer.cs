@@ -46,8 +46,7 @@ namespace dbShowDepends.Settings
         }
 
         // генерирует исключение в случае ошибки
-        [Obsolete]
-        public static void SaveDbParams (DbParams par)
+        public static void SaveDefaultParams (DbParams par)
         {
             const string regPath = RegistryRoot + OcsBranch + "\\" + "default";
             try
@@ -66,7 +65,6 @@ namespace dbShowDepends.Settings
         }
 
         // генерирует исключение в случае ошибки
-        [Obsolete]
         public static DbParams LoadDefaultParams()
         {
             const string regPath = RegistryRoot + OcsBranch + "\\" + "default";

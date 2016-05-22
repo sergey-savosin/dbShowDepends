@@ -99,12 +99,18 @@ namespace dbShowDepends
             //cbConnection.ComboBox.DisplayMember = "ConnectionName";
             //cbConnection.ComboBox.Width *= 2;
 
-            //var dbParams = SettingLayer.LoadDefaultParams();
-            //cbConnection.Text = dbParams.ServerName;
-            //tscbDatabaseName.Text = dbParams.DbName;
-
             init_fctbSrcCode();
             init_imageList();
+        }
+
+        private void FrmMainWindow_Load(object sender, EventArgs e)
+        {
+            LoadBsConnections();
+
+            var dbParams = SettingLayer.LoadDefaultParams();
+            cbConnection.Text = dbParams.ServerName;
+            tscbDatabaseName.Text = dbParams.DbName;
+
         }
 
         private void init_imageList()
@@ -355,7 +361,7 @@ namespace dbShowDepends
 
                 // сохранить настройки соединения
                 var dbParams = new DbParams(cbConnection.Text, true, "", "", tscbDatabaseName.Text);
-                SettingLayer.SaveDbParams(dbParams);
+                SettingLayer.SaveDefaultParams(dbParams);
 
                 // подготовить рабочую таблицу
                 //dbLayer.PrepareTempTable(); - перенесено в prepareCurrentDbName
@@ -429,11 +435,6 @@ namespace dbShowDepends
             
             cbConnection.ComboBox.DataSource = bsConnections;
             cbConnection.ComboBox.DisplayMember = "ConnectionName";
-        }
-
-        private void FrmMainWindow_Load(object sender, EventArgs e)
-        {
-            LoadBsConnections();
         }
 
     }
