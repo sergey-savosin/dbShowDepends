@@ -119,6 +119,17 @@ namespace dbShowDepends {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на select ltrim(rtrim(o.type)) object_type
+        ///from sys.objects o
+        ///where o.object_id = object_id(@ObjectName).
+        /// </summary>
+        internal static string getObjectType {
+            get {
+                return ResourceManager.GetString("getObjectType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на select SCHEMA_NAME(o.schema_id) + &apos;.&apos;+ OBJECT_NAME(o.object_id) FullName
         ///, DB_NAME() DatabaseName
         ///, o.type
@@ -186,6 +197,34 @@ namespace dbShowDepends {
         internal static string showSource {
             get {
                 return ResourceManager.GetString("showSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на set nocount on
+        ///--declare @ObjectName sysname = &apos;dbo.Orders&apos;
+        ///
+        ////* входящие объекты */
+        ///declare @objects table (
+        ///	schemaName sysname not null,
+        ///	tableName sysname not null
+        ///
+        ///	primary key (schemaName, tableName)
+        ///)
+        ///
+        ////* исходящие строки */
+        ///declare @output table (
+        ///	schemaName sysname not null,
+        ///	tableName sysname not null,
+        ///	rownum bigint not null,
+        ///	rowtype varchar(50) not null,
+        ///	indent int default(0), --отступ при форматировании запроса
+        ///	sqltext varchar(max) null,
+        ///	endType tinyint default(0) --тип с [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string showTableSource {
+            get {
+                return ResourceManager.GetString("showTableSource", resourceCulture);
             }
         }
         

@@ -225,7 +225,17 @@ namespace dbShowDepends
         public string GetObjectSource(string objName, ref string objType)
         {
             string srcCode;
-            string sQuery = dbQueries.showSource;
+            string sQuery;
+
+            objType = GetObjectType(objName);
+
+            if (objType == null)
+                return "<object type not avaible>";
+
+            if (objType == "U") /* user table */
+                sQuery = dbQueries.showTableSource;
+            else
+                sQuery = dbQueries.showSource;
 
             var scom = new SqlCommand(sQuery, sc) {CommandType = CommandType.Text};
             scom.Parameters.Add(new SqlParameter("@ObjectName", SqlDbType.VarChar, 250));
@@ -238,16 +248,45 @@ namespace dbShowDepends
                     //read only first record
                     reader.Read();
                     srcCode = ((IDataRecord)reader)["definition"].ToString();
-                    objType = ((IDataRecord)reader)["type"].ToString();
                 }
                 else
                 {
                     srcCode = "<not avaible>";
-                    objType = null;
                 }
                 reader.Close();
             }
             return srcCode;
+        }
+
+        /// <summary>
+        /// Получить тип объекта
+        /// </summary>
+        /// <param name="objName">Полное имя объекта</param>
+        /// <returns>Тип объекта</returns>
+        public string GetObjectType(string objName)
+        {
+            string objType;
+            string sQuery = dbQueries.getObjectType;
+
+            var scom = new SqlCommand(sQuery, sc) { CommandType = CommandType.Text };
+            scom.Parameters.Add(new SqlParameter("@ObjectName", SqlDbType.VarChar, 250));
+            scom.Parameters["@ObjectName"].Value = objName;
+
+            using (var reader = scom.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    //read only first record
+                    reader.Read();
+                    objType = ((IDataRecord)reader)["object_type"].ToString();
+                }
+                else
+                {
+                    objType = null;
+                }
+                reader.Close();
+            }
+            return objType;
         }
     }
 }

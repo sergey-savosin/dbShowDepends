@@ -1,333 +1,61 @@
-п»ї<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
+/******************************************
+ Описание
+   процедура получения строки создания таблиц БД
+ Не учитываются: Identity, Default
+ 
+ Аргументы
+   @ObjectName
+ 
+ Возвращаемое значение
+   сейчас в таблице @output
 
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="changeDB" xml:space="preserve">
-    <value>use &lt;DB&gt;;</value>
-    <comment>changeDB</comment>
-  </data>
-  <data name="databaseList" xml:space="preserve">
-    <value>select d.name
-from sys.databases d
-order by d.name;</value>
-    <comment>databaseList</comment>
-  </data>
-  <data name="findReferencedObjs" xml:space="preserve">
-    <value>--declare @ObjectName sysname = 'dbo.korm_Request_CheckBusinessLogic';
+ Примечание
+rownum: 0:4 - параметры до запроса
 
-if object_id('tempdb..#weakObj') is null
-	create table #weakObj (objName sysname not null);
+		5 - выражение CREATE TABLE...
 
-IF EXISTS (
-    select 1
-    from #weakObj w
-    where w.objName = @ObjectName
-)
-BEGIN
-  SELECT '&lt;not avaible: weak object&gt;' refName;
-END
-ELSE
-BEGIN
-  SELECT DISTINCT
-    ISNULL(re.referenced_schema_name, 'dbo')
-    + '.'
-    + re.referenced_entity_name
-    + ISNULL('.' + re.referenced_minor_name, '') refName
-  , re.referenced_database_name refDbName
-  , o.[type]
-  FROM sys.dm_sql_referenced_entities(@ObjectName, 'object') re
-  LEFT JOIN sys.objects o
-     ON o.[object_id] = re.referenced_id
-  WHERE re.referenced_minor_id = 0;
-END;</value>
-    <comment>РїРѕРёСЃРє СЃРѕРґРµСЂР¶Р°С‰РёС…СЃСЏ РѕР±СЉРµРєС‚РѕРІ</comment>
-  </data>
-  <data name="getDbName" xml:space="preserve">
-    <value>select db_name();</value>
-    <comment>РРјСЏ С‚РµРєСѓС‰РµР№ Р‘Р”</comment>
-  </data>
-  <data name="getObjectType" xml:space="preserve">
-    <value>select ltrim(rtrim(o.type)) object_type
-from sys.objects o
-where o.object_id = object_id(@ObjectName)</value>
-    <comment>РџРѕР»СѓС‡РёС‚СЊ С‚РёРї РѕР±СЉРµРєС‚Р°</comment>
-  </data>
-  <data name="objectList" xml:space="preserve">
-    <value>select SCHEMA_NAME(o.schema_id) + '.'+ OBJECT_NAME(o.object_id) FullName
-, DB_NAME() DatabaseName
-, o.type
-, o.type_desc
-, o.modify_date
-from sys.objects o
-where o.name like '%' + isnull(@SearchName,'') + '%'
-  AND o.type not in ('S', 'IT', 'SQ')
-  AND o.type IN (&lt;objTypes&gt;)
-order by FullName;</value>
-    <comment>objectList</comment>
-  </data>
-  <data name="prepareWeakObjects" xml:space="preserve">
-    <value>-- РїРѕРёСЃРє "РїР»РѕС…РёС…" РѕР±СЉРµРєС‚РѕРІ
--- (РЅР° РєРѕС‚РѕСЂС‹Рµ РЅРµР»СЊР·СЏ РЅР°Р№С‚Рё СЃСЃС‹Р»РєРё)
+		11:1034 (1024) - описание столбцов (сюда можно добавить выражения default)
+				Столбцов в таблице может быть <=1024.
 
-set nocount on;
+		2001:6500 (18*250) - описание индексов-ограничений:
+				2001: шапка
+				2002-2017:столбцы
+				2018:подвал
 
-if OBJECT_ID('tempdb..#weakObj') is not null
-  drop table #weakObj;
-create table #weakObj (objId int primary key, objName varchar(100) not null);
+				Индексов может быть <= 250 штук, столбцов <= 16.
 
-declare @objId int, @objName sysname;
-declare @res table (r int not null);
+		7000 - закрытие выражения CREATE TABLE
 
-declare cr cursor local
-for
-  select o.object_id objId
-  , OBJECT_SCHEMA_NAME(o.object_id, DB_ID()) + '.' + o.name objName
-  from sys.all_objects o
-  where o.type in ('u', 'f', 'fn', 'p');
+		7001:267500 (1042*250) - описание индексов:
+				7001 - шапка
+				7002-7017 (16) - столбцы в ключе индекса
+				7018 - шапка INCLUDE
+				7019-8041 (1023) - столбцы в include
+				8042 - подвал индекса
 
-open cr;
+				Индексов может быть <= 250 штук, ключевых столбцов <= 16, include-столбцов <= 1023.
 
-while 1=1
-begin
-  fetch cr into @objId, @objName;
-  if @@FETCH_STATUS&lt;&gt;0
-    break;
+		268001:787156 (2052*253) - описание внешних ключей
+				268001 - шапка
+				268002-269025 (1024) - столбцы таблицы, содержащей внешний ключ
+				269026 - слово REFERENCES
+				269027-270050 (1024) - столбцы таблицы, на которую ссылается ключ
+				270051 - подвал
+				270052 - активация проверки внешнего ключа
 
-  begin try
-  
-  insert @res(r)
-  select 1
-  from sys.dm_sql_referenced_entities(@objName, 'object') re;
-  
-  end try
-  begin catch
-    print @objName + ' (' + cast(@objId as varchar(50)) + ')';
-    print error_message();
-    
+				Внешних ключей рекомендуется 253 штуки, столбцов в ключе, как и в ссылаемой таблице, может быть сколько угодно (=1024)
 
-    insert #weakObj (objId, objName)
-    values (@objId, @objName);
+		790001:792048 (2*1024) - проверки на таблицу. Например, 1024 штук
+				790001 - создание ограничения
+				790002 - включение ограничения
 
-  end catch
-end;
+Что делать с столбец таблицы.IsPersistent ?
+ ******************************************/
 
-close cr;
-deallocate cr;</value>
-    <comment>prepareWeakObjects</comment>
-  </data>
-  <data name="showSource" xml:space="preserve">
-    <value>--declare @ObjectName sysname;
---set @ObjectName = '[dbo].[CustOrdersOrders]'
---set @ObjectName = 'dbo.Orders';
-
-declare @otype char(1);
-select top(1) @otype = o.type
-from sys.objects o
-where o.object_id = object_id(@ObjectName);
-
-if @otype not in ('U') /* table */
-begin
-	SELECT sm.object_id
-	, object_schema_name(sm.object_id) + '.' + OBJECT_NAME(sm.object_id) AS object_name
-	, o.type
-	, o.type_desc
-	, sm.definition
-	FROM sys.sql_modules AS sm
-	JOIN sys.objects AS o ON sm.object_id = o.object_id
-	where sm.object_id = object_id(@ObjectName)
-	and o.type not in ('U') /* table */
-end
-
-if @otype = 'U' /* table */
-begin
-	with obj as
-	(
-		select
-		object_schema_name(o.object_id) + '.' + OBJECT_NAME(o.object_id) AS object_name
-		, o.object_id
-		, o.type
-		, o.type_desc
-		from sys.objects o
-		where o.object_id = object_id(@ObjectName)
-	)
-	, cols as
-	(
-		select
-		c.name col_name
-		, t.system_type_id
-		, t.name system_type_name
-		, t.is_table_type
-		, t.is_user_defined
-		, c.is_identity
-		, c.is_nullable
-		, c.is_computed
-		, c.is_xml_document
-		, c.xml_collection_id
-		, c.max_length
-		, c.precision
-		, c.scale
-		, c.collation_name
-		, c.column_id
-		from obj o
-		inner join sys.columns c on c.object_id = o.object_id
-		left join sys.types t on t.user_type_id = c.user_type_id
-	)
-	, sql_str as
-	(
-		select [definition] = 
-		(
-			select
-				c.col_name + ' '
-				+ c.system_type_name + ' '
-				+ case c.is_nullable
-					when 1 then 'NOT NULL'
-					else 'NULL'
-				end
-				+ case c.is_identity
-					when 1 then ' IDENTITY'
-					else ''
-				end
-				+ char(10)
-			from cols c
-			order by c.column_id
-			for xml path('')
-		)
-	)
-	select 
-	o.object_id
-	, o.object_name
-	, o.type
-	, o.type_desc
-	, definition =
-	'Table: ' + o.object_name
-	+ char(10) + 'Columns: '
-	+ char(10) + s.definition
-	from obj o
-	cross join sql_str s;
-
-end;</value>
-    <comment>РћС‚РѕР±СЂР°Р¶РµРЅРёРµ С‚РµРєСЃС‚Р° РѕР±СЉРµРєС‚Р°</comment>
-  </data>
-  <data name="showTableSource" xml:space="preserve">
-    <value>set nocount on
+set nocount on
 --declare @ObjectName sysname = 'dbo.Orders'
 
-/* РІС…РѕРґСЏС‰РёРµ РѕР±СЉРµРєС‚С‹ */
+/* входящие объекты */
 declare @objects table (
 	schemaName sysname not null,
 	tableName sysname not null
@@ -335,15 +63,15 @@ declare @objects table (
 	primary key (schemaName, tableName)
 )
 
-/* РёСЃС…РѕРґСЏС‰РёРµ СЃС‚СЂРѕРєРё */
+/* исходящие строки */
 declare @output table (
 	schemaName sysname not null,
 	tableName sysname not null,
 	rownum bigint not null,
 	rowtype varchar(50) not null,
-	indent int default(0), --РѕС‚СЃС‚СѓРї РїСЂРё С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРё Р·Р°РїСЂРѕСЃР°
+	indent int default(0), --отступ при форматировании запроса
 	sqltext varchar(max) null,
-	endType tinyint default(0) --С‚РёРї СЃС‚СЂРѕРєРё. 0-РѕР±С‹С‡РЅР°СЏ, 1-РїРѕСЃР»Рµ СЃС‚СЂРѕРєРё GO, 2-РїРѕСЃР»Рµ СЃС‚СЂРѕРєРё Р·Р°РїСЏС‚Р°СЏ
+	endType tinyint default(0) --тип строки. 0-обычная, 1-после строки GO, 2-после строки запятая
 
 	primary key (schemaName, tableName, rownum)
 )
@@ -369,7 +97,7 @@ if object_id('tempdb..#fk_cols') is not null
 if object_id('tempdb..#table_chk') is not null
   drop table #table_chk;
 
---0. РїРѕРґРіРѕС‚РѕРІРєР° СЃРїРёСЃРєР° РѕР±СЉРµРєС‚РѕРІ
+--0. подготовка списка объектов
 insert @objects (schemaName, tableName)
 select
 	schema_name(t.schema_id) sName,
@@ -381,7 +109,7 @@ order by
 	schema_name(t.schema_id), t.name
 
 
---1. РѕРїСЂРµРґРµР»РµРЅРёРµ РїР°СЂР°РјРµС‚СЂРѕРІ ANSI_NULLS, QUOTED_IDENTIFIER
+--1. определение параметров ANSI_NULLS, QUOTED_IDENTIFIER
 SELECT
 	SCHEMA_NAME(tbl.schema_id) AS sName,
 	tbl.name AS tName,
@@ -409,7 +137,7 @@ into #ansi_params
 FROM
 	sys.tables AS tbl
 	INNER JOIN @objects ob ON ob.schemaName = SCHEMA_NAME(tbl.schema_id) AND ob.tableName = tbl.name
-	INNER JOIN sys.indexes AS idx ON idx.object_id = tbl.object_id and idx.index_id &lt; 2
+	INNER JOIN sys.indexes AS idx ON idx.object_id = tbl.object_id and idx.index_id < 2
 	LEFT JOIN sys.data_spaces AS dsidx ON dsidx.data_space_id = idx.data_space_id
 
 insert @output (
@@ -456,9 +184,9 @@ select
 from
 	#ansi_params
 
---2. РЅСѓР¶РµРЅ Р»Рё SET ANSI_PADDING?
+--2. нужен ли SET ANSI_PADDING?
 
---3a. СЃРѕР·РґР°РЅРёРµ РЅР°Р·РІР°РЅРёСЏ С‚Р°Р±Р»РёС†С‹
+--3a. создание названия таблицы
 insert @output (
 	schemaName,
 	tableName,
@@ -497,7 +225,7 @@ from
 	#ansi_params
 
 
---3b. СЃРѕР·РґР°РЅРёРµ СЃС‚РѕР»Р±С†РѕРІ С‚Р°Р±Р»РёС†С‹
+--3b. создание столбцов таблицы
 SELECT
 	SCHEMA_NAME(tbl.schema_id) AS [sName],
 	tbl.name AS [tName],
@@ -510,7 +238,7 @@ SELECT
 	ISNULL(baset.name, N'') AS [SystemType],
 	sclmns.name AS [DataTypeSchema],
 	CAST(clmns.is_rowguidcol AS bit) AS [RowGuidCol],
-	CAST(CASE WHEN baset.name IN (N'nchar', N'nvarchar') AND clmns.max_length &lt;&gt; -1 THEN clmns.max_length/2 ELSE clmns.max_length END AS int) AS [Length],
+	CAST(CASE WHEN baset.name IN (N'nchar', N'nvarchar') AND clmns.max_length <> -1 THEN clmns.max_length/2 ELSE clmns.max_length END AS int) AS [Length],
 	CAST(clmns.precision AS int) AS [NumericPrecision],
 	ISNULL(clmns.collation_name, N'') AS [Collation],
 	CAST(clmns.scale AS int) AS [NumericScale],
@@ -578,7 +306,7 @@ select
 	''
 	 as sqltext,
 	case
-		when c.ID &lt; cols.cnt
+		when c.ID < cols.cnt
 		then 2
 		else 0
 	end as rowEnd
@@ -590,7 +318,7 @@ from
 		where ac.object_id = c.objectid
 	) cols
 
---4a. СЃРїРёСЃРѕРє РёРЅРґРµРєСЃРѕРІ-РѕРіСЂР°РЅРёС‡РµРЅРёР№ (PK, UI)
+--4a. список индексов-ограничений (PK, UI)
 SELECT
 	Row_Number() Over (Partition by tbl.schema_id, tbl.name order by i.index_id) rn,
 	Row_Number() Over (Partition by tbl.schema_id, tbl.name, case when is_primary_key=0 and is_unique_constraint=0 then 0 else 1 end order by i.index_id) rn_for_comma,
@@ -617,7 +345,7 @@ INTO
 FROM
 	sys.tables AS tbl
 	INNER JOIN @objects ob ON ob.schemaName = SCHEMA_NAME(tbl.schema_id) AND ob.tableName = tbl.name
-	INNER JOIN sys.indexes AS i ON (i.index_id &gt; 0 and i.is_hypothetical = 0) AND (i.object_id=tbl.object_id)
+	INNER JOIN sys.indexes AS i ON (i.index_id > 0 and i.is_hypothetical = 0) AND (i.object_id=tbl.object_id)
 	LEFT OUTER JOIN sys.key_constraints AS k ON k.parent_object_id = i.object_id AND k.unique_index_id = i.index_id
 	LEFT OUTER JOIN sys.data_spaces AS dsi ON dsi.data_space_id = i.data_space_id
 	--LEFT OUTER JOIN sys.xml_indexes AS xi ON xi.object_id = i.object_id AND xi.index_id = i.index_id
@@ -625,7 +353,7 @@ FROM
 ORDER BY
 	sName ASC, tName ASC, i.index_id ASC
 
-/* С€Р°РїРєР° РёРЅРґРµРєСЃР° */
+/* шапка индекса */
 insert @output (
 	schemaName,
 	tableName,
@@ -645,7 +373,7 @@ select
 		case IndexKeyType
 			when 1 then 'PRIMARY KEY '
 			when 2 then 'UNIQUE '
-			else '&lt;error&gt;'
+			else '<error>'
 		end +
 		case IsClustered
 			when 1 then 'CLUSTERED'
@@ -656,9 +384,9 @@ select
 from
 	#index_name iName
 where
-	IndexKeyType &gt;0
+	IndexKeyType >0
 
-/* РїРѕРґРІР°Р» РёРЅРґРµРєСЃР°-РѕРіСЂР°РЅРёС‡РµРЅРёСЏ: РІ РїРѕСЃР»РµРґРЅРµР№ СЃС‚СЂРѕРєРµ Р·Р°РїСЏС‚СѓСЋ РјРѕР¶РЅРѕ РѕСЃС‚Р°РІРёС‚СЊ. Р’С‹РїРѕР»РЅСЏРµС‚СЃСЏ РЅР° mssql2005 */
+/* подвал индекса-ограничения: в последней строке запятую можно оставить. Выполняется на mssql2005 */
 union all
 select
 	sName,
@@ -683,12 +411,12 @@ from
 		from #index_name i
 		where i.sName = iName.sName
 			AND i.tName = iName.tName
-			AND IndexKeyType &gt;0
+			AND IndexKeyType >0
 	) indexes
 where
-	IndexKeyType&gt;0
+	IndexKeyType>0
 
---4b. СЃС‚РѕР»Р±С†С‹ РёРЅРґРµРєСЃРѕРІ-РѕРіСЂР°РЅРёС‡РµРЅРёР№
+--4b. столбцы индексов-ограничений
 SELECT
 	SCHEMA_NAME(tbl.schema_id) AS sName,
 	tbl.name AS tName,
@@ -707,8 +435,8 @@ INTO #index_columns
 FROM
 	sys.tables AS tbl
 	INNER JOIN @objects ob ON ob.schemaName = SCHEMA_NAME(tbl.schema_id) AND ob.tableName = tbl.name
-	INNER JOIN sys.indexes AS i ON (i.index_id &gt; 0 and i.is_hypothetical = 0) AND (i.object_id=tbl.object_id)
-	INNER JOIN sys.index_columns AS ic ON (ic.column_id &gt; 0 and (ic.key_ordinal &gt; 0 or ic.partition_ordinal = 0 or ic.is_included_column != 0)) AND (ic.index_id=CAST(i.index_id AS int) AND ic.object_id=i.object_id)
+	INNER JOIN sys.indexes AS i ON (i.index_id > 0 and i.is_hypothetical = 0) AND (i.object_id=tbl.object_id)
+	INNER JOIN sys.index_columns AS ic ON (ic.column_id > 0 and (ic.key_ordinal > 0 or ic.partition_ordinal = 0 or ic.is_included_column != 0)) AND (ic.index_id=CAST(i.index_id AS int) AND ic.object_id=i.object_id)
 	INNER JOIN sys.columns AS clmns ON clmns.object_id = ic.object_id and clmns.column_id = ic.column_id
 ORDER BY
 	sName ASC, tName ASC, iName ASC,[ID] ASC
@@ -726,7 +454,7 @@ insert @output (
 select
 	iCols.sName,
 	iCols.tName,
-	2001 +20 *(iName.rn -1) +iCols.ID, --iCols.ID РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ 1
+	2001 +20 *(iName.rn -1) +iCols.ID, --iCols.ID начинается с 1
 	'constr-index column',
 	2,
 	'[' +iCols.colName +'] ' +
@@ -752,12 +480,12 @@ from
 			AND ic.iName = iName.iName
 	) colsCount
 where
-	iName.IndexKeyType&gt;0
+	iName.IndexKeyType>0
 
 
---5a. СЃРѕР·РґР°РЅРёРµ РёРЅРґРµРєСЃРѕРІ
+--5a. создание индексов
 
-/* С€Р°РїРєР° РёРЅРґРµРєСЃР° */
+/* шапка индекса */
 insert @output (
 	schemaName,
 	tableName,
@@ -789,7 +517,7 @@ from
 where
 	IndexKeyType =0
 
-/* С€Р°РїРєР° include-СЃРµРєС†РёРё */
+/* шапка include-секции */
 union all
 select
 	sName,
@@ -811,9 +539,9 @@ from
 	) inclColumns
 where
 	IndexKeyType =0
-	and inclColumns.cnt&gt;0
+	and inclColumns.cnt>0
 
-/* РїРѕРґРІР°Р» РёРЅРґРµРєСЃР° */
+/* подвал индекса */
 union all
 select
 	sName,
@@ -834,8 +562,8 @@ where
 	IndexKeyType=0
 
 
--- 5b. СЃС‚РѕР»Р±С†С‹ РёРЅРґРµРєСЃР°
-/* РєР»СЋС‡РµРІС‹Рµ РїРѕР»СЏ */
+-- 5b. столбцы индекса
+/* ключевые поля */
 insert @output (
 	schemaName,
 	tableName,
@@ -848,7 +576,7 @@ insert @output (
 select
 	iCols.sName,
 	iCols.tName,
-	7001 +1042 *(iName.rn -1) +iCols.ID, --iCols.ID РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ 1
+	7001 +1042 *(iName.rn -1) +iCols.ID, --iCols.ID начинается с 1
 	'index key-column',
 	1,
 	'[' +iCols.colName +'] ' +
@@ -879,11 +607,11 @@ where
 	and iCols.IsIncluded = 0
 
 union all
-/* include-РїРѕР»СЏ РёРЅРґРµРєСЃР° */
+/* include-поля индекса */
 select
 	iCols.sName,
 	iCols.tName,
-	7019 +1042 *(iName.rn -1) +iCols.Included_ID, --iCols.IncludedID РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ 1
+	7019 +1042 *(iName.rn -1) +iCols.Included_ID, --iCols.IncludedID начинается с 1
 	'index key-column',
 	1,
 	'[' +iCols.colName +']',
@@ -911,8 +639,8 @@ where
 
 
 
---6a. Р’РЅРµС€РЅРёРµ РєР»СЋС‡Рё
-/*РІРЅРµС€РЅРёРµ РєР»СЋС‡Рё: РЅР°Р·РІР°РЅРёРµ*/
+--6a. Внешние ключи
+/*внешние ключи: название*/
 SELECT
 	Row_Number() Over (Partition by tbl.schema_id, tbl.name order by cstr.object_id) rn,
 	SCHEMA_NAME(tbl.schema_id) AS sName,
@@ -935,7 +663,7 @@ FROM
 ORDER BY
 	sName ASC, tName ASC, fkName ASC
 
-/* С€Р°РїРєР° РІРЅРµС€РЅРµРіРѕ РєР»СЋС‡Р° */
+/* шапка внешнего ключа */
 insert @output (
 	schemaName,
 	tableName,
@@ -963,7 +691,7 @@ from
 	#fk_name fkName
 
 union all
-/* С€Р°РїРєР° РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ СЃС‚РѕР»Р±С†РѕРІ С‚Р°Р±Р»РёС†С‹, РЅР° РєРѕС‚РѕСЂСѓСЋ СЃСЃС‹Р»Р°РµС‚СЃСЏ РІРЅРµС€РЅРёР№ РєР»СЋС‡ */
+/* шапка перечисления столбцов таблицы, на которую ссылается внешний ключ */
 select
 	sName,
 	tName,
@@ -976,7 +704,7 @@ from
 	#fk_name fkName
 
 union all
-/* РїРѕРґРІР°Р» РІРЅРµС€РЅРµРіРѕ РєР»СЋС‡Р° */
+/* подвал внешнего ключа */
 select
 	sName,
 	tName,
@@ -989,8 +717,8 @@ from
 	#fk_name fkName
 
 
---6b. РІРЅРµС€РЅРёР№ РєР»СЋС‡: СЃС‚РѕР»Р±С†С‹
-/* РІРЅРµС€РЅРёРµ РєР»СЋС‡Рё: РѕРїСЂРµРґРµР»РµРЅРёРµ */
+--6b. внешний ключ: столбцы
+/* внешние ключи: определение */
 SELECT
 	SCHEMA_NAME(tbl.schema_id) AS sName,
 	tbl.name AS tName,
@@ -1018,11 +746,11 @@ insert @output (
 	sqltext,
 	endType
 )
-/* СЃС‚РѕР»Р±С†С‹ С‚Р°Р±Р»РёС†С‹, СЃРѕРґРµСЂР¶Р°С‰РµР№ РІРЅРµС€РЅРёР№ РєР»СЋС‡ */
+/* столбцы таблицы, содержащей внешний ключ */
 select
 	fkName.sName,
 	fkName.tName,
-	268001 +2052 *(fkName.rn -1) +fkCols.ID, --ID РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ 1
+	268001 +2052 *(fkName.rn -1) +fkCols.ID, --ID начинается с 1
 	'fkey columns',
 	1 as indent,
 	'[' +fkCols.colName +']',
@@ -1044,11 +772,11 @@ from
 	) fkColCount
 
 union all
-/* СЃС‚РѕР»Р±С†С‹ С‚Р°Р±Р»РёС†С‹, РЅР° РєРѕС‚РѕСЂСѓСЋ СЃСЃС‹Р»Р°РµС‚СЃСЏ РІРЅРµС€РЅРёР№ РєР»СЋС‡ */
+/* столбцы таблицы, на которую ссылается внешний ключ */
 select
 	fkName.sName,
 	fkName.tName,
-	269026 +2052 *(fkName.rn -1) +fkCols.ID, --ID РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ 1
+	269026 +2052 *(fkName.rn -1) +fkCols.ID, --ID начинается с 1
 	'fkey ref-columns',
 	1 as indent,
 	'[' +fkCols.refColName +']',
@@ -1070,7 +798,7 @@ from
 	) fkColCount
 
 
---6c. РІС‹РїРѕР»РЅРµРЅРёРµ РїСЂРѕРІРµСЂРєРё РІРЅРµС€РЅРµРіРѕ РєР»СЋС‡Р°
+--6c. выполнение проверки внешнего ключа
 insert @output (
 	schemaName,
 	tableName,
@@ -1091,7 +819,7 @@ select
 from
 	#fk_name fkName
 
---9. СЃРѕР·РґР°РЅРёРµ РѕРіСЂР°РЅРёС‡РµРЅРёР№ (РїСЂРѕРІРµСЂРѕРє)
+--9. создание ограничений (проверок)
 SELECT
 	Row_Number() OVER (Partition by tbl.schema_id, tbl.name Order by cstr.name) rn,
 	SCHEMA_NAME(tbl.schema_id) AS [sName],
@@ -1177,7 +905,7 @@ select
 	end +
 	char(13) +char(10)
 from @output o
-where left(rowtype,4)&lt;&gt;'fkey'
+where left(rowtype,4)<>'fkey'
 order by schemaName, tableName, o.rownum
 
 select
@@ -1203,11 +931,4 @@ select [definition] =
 
 --select *
 --from @output
---order by schemaName, tableName, rownum</value>
-    <comment>РџРѕР»СѓС‡РёС‚СЊ СЃРєСЂРёРїС‚ СЃРѕР·РґР°РЅРёСЏ С‚Р°Р±Р»РёС†С‹</comment>
-  </data>
-  <data name="tempTableId" xml:space="preserve">
-    <value>select OBJECT_ID('tempdb..#weakObj')</value>
-    <comment>РџСЂРѕРІРµСЂРєР° РЅР° РЅР°Р»РёС‡РёРµ СЂР°Р±РѕС‡РµР№ С‚Р°Р±Р»РёС†С‹</comment>
-  </data>
-</root>
+--order by schemaName, tableName, rownum
