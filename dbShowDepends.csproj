@@ -156,6 +156,8 @@
     <None Include="Resources\ImageTableSelected.gif" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="find_weak_objects.sql" />
+    <Content Include="Support_createTableScript.sql" />
     <None Include="Resources\btnClear.png" />
     <Content Include="Resources\btnSearch.png" />
     <Content Include="Resources\ImageEmpty.gif" />

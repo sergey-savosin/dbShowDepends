@@ -1,7 +1,6 @@
 /******************************************
  Описание
    процедура получения строки создания таблиц БД
- Не учитываются: Identity, Default
  
  Аргументы
    @ObjectName
@@ -49,11 +48,11 @@ rownum: 0:4 - параметры до запроса
 				790001 - создание ограничения
 				790002 - включение ограничения
 
-Что делать с столбец таблицы.IsPersistent ?
+Что делать с атрибутом столбца таблицы - IsPersistent ?
  ******************************************/
 
 set nocount on
---declare @ObjectName sysname = 'dbo.Orders'
+--declare @ObjectName sysname = 'dbo.DescriptTable'
 
 /* входящие объекты */
 declare @objects table (
@@ -81,6 +80,9 @@ if object_id('tempdb..#ansi_params') is not null
 
 if object_id('tempdb..#columns') is not null
   drop table #columns;
+
+IF OBJECT_ID('tempdb..#colDefaults') IS NOT NULL
+  DROP TABLE #colDefaults;
 
 if object_id('tempdb..#index_name') is not null
   drop table #index_name;
@@ -240,6 +242,9 @@ SELECT
 	CAST(clmns.is_rowguidcol AS bit) AS [RowGuidCol],
 	CAST(CASE WHEN baset.name IN (N'nchar', N'nvarchar') AND clmns.max_length <> -1 THEN clmns.max_length/2 ELSE clmns.max_length END AS int) AS [Length],
 	CAST(clmns.precision AS int) AS [NumericPrecision],
+	clmns.is_identity AS [Identity],
+	CAST(ISNULL(ic.seed_value,0) AS bigint) AS [IdentitySeed],
+	CAST(ISNULL(ic.increment_value,0) AS bigint) AS [IdentityIncrement],
 	ISNULL(clmns.collation_name, N'') AS [Collation],
 	CAST(clmns.scale AS int) AS [NumericScale],
 	clmns.is_nullable AS [Nullable],
@@ -254,8 +259,29 @@ FROM
 	LEFT OUTER JOIN sys.types AS usrt ON usrt.user_type_id = clmns.user_type_id
 	LEFT OUTER JOIN sys.types AS baset ON baset.user_type_id = clmns.system_type_id and baset.user_type_id = baset.system_type_id
 	LEFT OUTER JOIN sys.schemas AS sclmns ON sclmns.schema_id = usrt.schema_id
-order by
+	LEFT OUTER JOIN sys.identity_columns AS ic ON ic.object_id = clmns.object_id and ic.column_id = clmns.column_id
+ORDER by
 	sName, tName, ID
+
+
+-- 3c. Default значения
+SELECT
+	SCHEMA_NAME(tbl.schema_id) AS [sName],
+	tbl.name AS [tName],
+	clmns.name AS [colName],
+	cstr.name AS [defaultName],
+	CAST(cstr.is_system_named AS BIT) AS [IsSystemNamed],
+	cstr.definition AS [Text]
+INTO #colDefaults
+FROM
+	sys.tables AS tbl
+	INNER JOIN @objects ob ON ob.schemaName = SCHEMA_NAME(tbl.schema_id) AND ob.tableName = tbl.name
+	INNER JOIN sys.all_columns AS clmns
+		ON  clmns.object_id = tbl.object_id
+	INNER JOIN sys.default_constraints AS cstr
+		ON  cstr.object_id = clmns.default_object_id
+ORDER BY
+	sName, tName, colName
 
 insert @output (
 	schemaName,
@@ -298,11 +324,28 @@ select
 		then ''
 		else 'COLLATE ' +c.Collation +' '
 	end +
+
+--	[DescriptTableId] [tinyint] IDENTITY(1,1) NOT NULL,
+	CASE
+		WHEN c.[Identity] = 1
+		THEN 'IDENTITY(' + LTRIM(c.IdentitySeed) + ',' + LTRIM(c.IdentityIncrement) + ') '
+		ELSE ''
+	END +
 	case
 		when c.Nullable=0
 		then 'NOT NULL'
 		else 'NULL'
 	end +
+
+-- [ModifiedDate] [datetime] NULL CONSTRAINT [DF_DescriptTable_ModifiedDate] DEFAULT (getdate()),
+-- [SupportedDirections] [varchar] (10) COLLATE Cyrillic_General_CI_AS NOT NULL DEFAULT ((1))
+	case
+		when cd.colName is not null AND cd.[IsSystemNamed] = 1
+		then ' DEFAULT ' + cd.[Text]
+		when cd.colName is not null AND cd.[IsSystemNamed] = 0
+		then ' CONSTRAINT ['+ cd.[defaultName] + '] DEFAULT ' + cd.[Text]
+		else ''
+	END +
 	''
 	 as sqltext,
 	case
@@ -317,6 +360,10 @@ from
 		from sys.all_columns ac (nolock)
 		where ac.object_id = c.objectid
 	) cols
+	LEFT JOIN #colDefaults cd
+		ON cd.sName = c.sName
+		AND cd.tName = c.tName
+		AND cd.colName = c.colName
 
 --4a. список индексов-ограничений (PK, UI)
 SELECT
@@ -886,6 +933,7 @@ from
 	#table_chk
 --select * from #ansi_params
 --select * from #columns
+--SELECT * FROM #colDefaults
 --select * from #index_name
 --select * from #index_columns
 --select * from #fk_name
