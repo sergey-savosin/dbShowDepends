@@ -157,6 +157,20 @@ BEGIN
 END;</value>
     <comment>поиск содержащихся объектов</comment>
   </data>
+  <data name="findReferencedTriggers" xml:space="preserve">
+    <value>--declare @TableName sysname = 'dbo.Table1'
+
+declare @objid int;
+
+select @objid = object_id(@TableName);
+
+select
+ refName = schema_name(schema_id) + '.' + o.name,
+ refDbName = NULL, /* current db */
+ [type] = o.type 
+ from sys.objects o
+ where parent_object_id = @objid and type IN ('TR','TA')</value>
+  </data>
   <data name="getDbName" xml:space="preserve">
     <value>select db_name();</value>
     <comment>Имя текущей БД</comment>

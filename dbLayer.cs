@@ -213,6 +213,41 @@ namespace dbShowDepends
                 reader.Close();
             }
 
+            string objectType = GetObjectType(objName);
+            
+            // Для таблицы пробуем получить списое её триггеров
+            if (objectType == "U")
+            {
+                recs.AddRange(GetTableTriggers(objName));
+            }
+
+            return recs;
+        }
+
+        /// <summary>
+        /// Получить список триггеров таблицы
+        /// ToDo: научиться показывать статус триггера (IsEnabled)
+        /// </summary>
+        /// <param name="tableName">Имя таблицы</param>
+        /// <returns>Список триггеров</returns>
+        public List<DbDataRecord> GetTableTriggers(string tableName)
+        {
+            var recs = new List<DbDataRecord>();
+            string sQuery = dbQueries.findReferencedTriggers;
+
+            var scom = new SqlCommand(sQuery, sc) { CommandType = CommandType.Text };
+            scom.Parameters.Add(new SqlParameter("@TableName", SqlDbType.VarChar, 250));
+            scom.Parameters["@TableName"].Value = tableName;
+
+            using (var reader = scom.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    recs.AddRange(reader.Cast<DbDataRecord>());
+                }
+                reader.Close();
+            }
+
             return recs;
         }
 

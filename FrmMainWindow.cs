@@ -348,6 +348,7 @@ namespace dbShowDepends
                 objTypes.Add(DbObjectType.IF);
                 objTypes.Add(DbObjectType.TF);
                 objTypes.Add(DbObjectType.U);
+                objTypes.Add(DbObjectType.TR);
 
                 var res = getDbLayer().GetObjectList(searchString, objTypes);
 

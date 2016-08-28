@@ -27,7 +27,7 @@ namespace dbShowDepends
     V 	VIEW
      */
 
-    public enum DbObjectType { P, FN, IF, TF, U, FK, V };
+    public enum DbObjectType { P, FN, IF, TF, U, FK, V, TR };
 
     public class DbObjectTypes
     {

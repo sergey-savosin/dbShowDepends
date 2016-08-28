@@ -110,6 +110,26 @@ namespace dbShowDepends {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на --declare @TableName sysname = &apos;dbo.Table1&apos;
+        ///
+        ///declare @objid int;
+        ///
+        ///select @objid = object_id(@TableName);
+        ///
+        ///select
+        /// refName = schema_name(schema_id) + &apos;.&apos; + o.name,
+        /// refDbName = NULL, /* current db */
+        /// [type] = o.type 
+        /// from sys.objects o
+        /// where parent_object_id = @objid and type IN (&apos;TR&apos;,&apos;TA&apos;).
+        /// </summary>
+        internal static string findReferencedTriggers {
+            get {
+                return ResourceManager.GetString("findReferencedTriggers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на select db_name();.
         /// </summary>
         internal static string getDbName {
