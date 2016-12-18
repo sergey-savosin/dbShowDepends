@@ -141,7 +141,14 @@ namespace dbShowDepends {
         /// <summary>
         ///   Ищет локализованную строку, похожую на select ltrim(rtrim(o.type)) object_type
         ///from sys.objects o
-        ///where o.object_id = object_id(@ObjectName).
+        ///where o.object_id = object_id(@ObjectName)
+        ///
+        ///UNION ALL
+        ///
+        ///select ltrim(rtrim(obj.type)) object_type
+        ///from sys.table_types tt
+        ///INNER JOIN sys.objects AS obj ON obj.object_id = tt.type_table_object_id
+        ///where schema_name(tt.schema_id) + &apos;.&apos; + tt.name = @ObjectName.
         /// </summary>
         internal static string getObjectType {
             get {
@@ -150,7 +157,9 @@ namespace dbShowDepends {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на select SCHEMA_NAME(o.schema_id) + &apos;.&apos;+ OBJECT_NAME(o.object_id) FullName
+        ///   Ищет локализованную строку, похожую на --declare @SearchName sysname;
+        ///
+        ///select SCHEMA_NAME(o.schema_id) + &apos;.&apos;+ OBJECT_NAME(o.object_id) FullName
         ///, DB_NAME() DatabaseName
         ///, o.type
         ///, o.type_desc
@@ -159,7 +168,14 @@ namespace dbShowDepends {
         ///where o.name like &apos;%&apos; + isnull(@SearchName,&apos;&apos;) + &apos;%&apos;
         ///  AND o.type not in (&apos;S&apos;, &apos;IT&apos;, &apos;SQ&apos;)
         ///  AND o.type IN (&lt;objTypes&gt;)
-        ///order by FullName;.
+        ///  and o.is_ms_shipped = 0
+        ///
+        ///UNION ALL
+        ///
+        ///select schema_name(tt.schema_id) + &apos;.&apos; + tt.name FullName
+        ///, DB_NAME() DatabaseName
+        ///, obj.type --&apos;TT&apos; [type]
+        ///, obj.type_desc --&apos;TableType&apos; [type_desc [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string objectList {
             get {
@@ -245,6 +261,36 @@ namespace dbShowDepends {
         internal static string showTableSource {
             get {
                 return ResourceManager.GetString("showTableSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на /******************************************
+        /// Описание
+        ///   процедура получения строки создания табличного типа БД
+        /// 
+        /// Аргументы
+        ///   @ObjectName
+        /// 
+        /// Возвращаемое значение
+        ///   сейчас в таблице @output
+        ///
+        /// Примечание
+        ///rownum: 0:4 - параметры до запроса
+        ///
+        ///		5 - выражение CREATE TYPE...
+        ///
+        ///		11:1034 (1024) - описание столбцов (сюда можно добавить выражения default)
+        ///				Столбцов в таблице может быть &lt;=1024.
+        ///
+        ///		2001:6500 (18*250) - описание индексов-ограничений:
+        ///				2001: шапка
+        ///				2002-2017:столбцы
+        ///				2 [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string showTableTypeSource {
+            get {
+                return ResourceManager.GetString("showTableTypeSource", resourceCulture);
             }
         }
         

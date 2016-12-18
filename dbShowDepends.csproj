@@ -158,6 +158,7 @@
   <ItemGroup>
     <Content Include="find_weak_objects.sql" />
     <Content Include="Support_createTableScript.sql" />
+    <Content Include="Support_createTypeTableScript.sql" />
     <None Include="Resources\btnClear.png" />
     <Content Include="Resources\btnSearch.png" />
     <Content Include="Resources\ImageEmpty.gif" />

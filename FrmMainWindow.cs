@@ -263,6 +263,9 @@ namespace dbShowDepends
                     e.Node.SelectedImageIndex = getTreeObjColorIndex(objType, true);
                 }
 
+                var newName = dbName + "." + objName;
+                listBoxViewHistory.Items.Add(newName);
+
                 toolStripStatusLabel1.Text = "Db: " + dbName + ", object: " + objName + ", fullName: " + fullObjName;
             }
             catch (Exception exc)
@@ -349,6 +352,7 @@ namespace dbShowDepends
                 objTypes.Add(DbObjectType.TF);
                 objTypes.Add(DbObjectType.U);
                 objTypes.Add(DbObjectType.TR);
+                objTypes.Add(DbObjectType.TT);
 
                 var res = getDbLayer().GetObjectList(searchString, objTypes);
 

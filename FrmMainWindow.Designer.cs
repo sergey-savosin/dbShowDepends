@@ -46,14 +46,18 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.treeObj = new System.Windows.Forms.TreeView();
             this.objectTreeViewImageList = new System.Windows.Forms.ImageList(this.components);
-            this.pnlChooseDate = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
             this.fctbSrcCode = new FastColoredTextBoxNS.FastColoredTextBox();
             this.pnlLogView = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.bsConnections = new System.Windows.Forms.BindingSource(this.components);
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.treeObj = new System.Windows.Forms.TreeView();
+            this.pnlTreeObjLabel = new System.Windows.Forms.Panel();
+            this.labelTreeObj = new System.Windows.Forms.Label();
+            this.pnlViewHistoryLabel = new System.Windows.Forms.Panel();
+            this.labelViewHistory = new System.Windows.Forms.Label();
+            this.listBoxViewHistory = new System.Windows.Forms.ListBox();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -61,10 +65,15 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.pnlChooseDate.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fctbSrcCode)).BeginInit();
             this.pnlLogView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bsConnections)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            this.pnlTreeObjLabel.SuspendLayout();
+            this.pnlViewHistoryLabel.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -199,8 +208,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.treeObj);
-            this.splitContainer1.Panel1.Controls.Add(this.pnlChooseDate);
+            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
             // 
             // splitContainer1.Panel2
             // 
@@ -210,43 +218,12 @@
             this.splitContainer1.SplitterDistance = 303;
             this.splitContainer1.TabIndex = 3;
             // 
-            // treeObj
-            // 
-            this.treeObj.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeObj.ImageIndex = 0;
-            this.treeObj.ImageList = this.objectTreeViewImageList;
-            this.treeObj.Location = new System.Drawing.Point(0, 21);
-            this.treeObj.Name = "treeObj";
-            this.treeObj.SelectedImageIndex = 0;
-            this.treeObj.Size = new System.Drawing.Size(303, 348);
-            this.treeObj.TabIndex = 1;
-            this.treeObj.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.treeObj_AfterExpand);
-            this.treeObj.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeObj_AfterSelect);
-            // 
             // objectTreeViewImageList
             // 
             this.objectTreeViewImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("objectTreeViewImageList.ImageStream")));
             this.objectTreeViewImageList.TransparentColor = System.Drawing.Color.Transparent;
             this.objectTreeViewImageList.Images.SetKeyName(0, "ImageEmpty.gif");
             this.objectTreeViewImageList.Images.SetKeyName(1, "ImageEmptySelected.gif");
-            // 
-            // pnlChooseDate
-            // 
-            this.pnlChooseDate.Controls.Add(this.label1);
-            this.pnlChooseDate.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlChooseDate.Location = new System.Drawing.Point(0, 0);
-            this.pnlChooseDate.Name = "pnlChooseDate";
-            this.pnlChooseDate.Size = new System.Drawing.Size(303, 21);
-            this.pnlChooseDate.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 5);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(106, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Список найденного";
             // 
             // fctbSrcCode
             // 
@@ -269,6 +246,7 @@
             this.fctbSrcCode.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.fctbSrcCode.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.fctbSrcCode.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fctbSrcCode.Font = new System.Drawing.Font("Courier New", 9.75F);
             this.fctbSrcCode.IsReplaceMode = false;
             this.fctbSrcCode.Location = new System.Drawing.Point(0, 21);
             this.fctbSrcCode.Name = "fctbSrcCode";
@@ -298,6 +276,84 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Текст объекта";
             // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.treeObj);
+            this.splitContainer2.Panel1.Controls.Add(this.pnlTreeObjLabel);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.listBoxViewHistory);
+            this.splitContainer2.Panel2.Controls.Add(this.pnlViewHistoryLabel);
+            this.splitContainer2.Size = new System.Drawing.Size(303, 369);
+            this.splitContainer2.SplitterDistance = 262;
+            this.splitContainer2.TabIndex = 3;
+            // 
+            // treeObj
+            // 
+            this.treeObj.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeObj.ImageIndex = 0;
+            this.treeObj.ImageList = this.objectTreeViewImageList;
+            this.treeObj.Location = new System.Drawing.Point(0, 21);
+            this.treeObj.Name = "treeObj";
+            this.treeObj.SelectedImageIndex = 0;
+            this.treeObj.Size = new System.Drawing.Size(303, 241);
+            this.treeObj.TabIndex = 2;
+            this.treeObj.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.treeObj_AfterExpand);
+            this.treeObj.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeObj_AfterSelect);
+            // 
+            // pnlTreeObjLabel
+            // 
+            this.pnlTreeObjLabel.Controls.Add(this.labelTreeObj);
+            this.pnlTreeObjLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlTreeObjLabel.Location = new System.Drawing.Point(0, 0);
+            this.pnlTreeObjLabel.Name = "pnlTreeObjLabel";
+            this.pnlTreeObjLabel.Size = new System.Drawing.Size(303, 21);
+            this.pnlTreeObjLabel.TabIndex = 1;
+            // 
+            // labelTreeObj
+            // 
+            this.labelTreeObj.AutoSize = true;
+            this.labelTreeObj.Location = new System.Drawing.Point(3, 5);
+            this.labelTreeObj.Name = "labelTreeObj";
+            this.labelTreeObj.Size = new System.Drawing.Size(106, 13);
+            this.labelTreeObj.TabIndex = 0;
+            this.labelTreeObj.Text = "Список найденного";
+            // 
+            // pnlViewHistoryLabel
+            // 
+            this.pnlViewHistoryLabel.Controls.Add(this.labelViewHistory);
+            this.pnlViewHistoryLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlViewHistoryLabel.Location = new System.Drawing.Point(0, 0);
+            this.pnlViewHistoryLabel.Name = "pnlViewHistoryLabel";
+            this.pnlViewHistoryLabel.Size = new System.Drawing.Size(303, 21);
+            this.pnlViewHistoryLabel.TabIndex = 0;
+            // 
+            // labelViewHistory
+            // 
+            this.labelViewHistory.AutoSize = true;
+            this.labelViewHistory.Location = new System.Drawing.Point(3, 5);
+            this.labelViewHistory.Name = "labelViewHistory";
+            this.labelViewHistory.Size = new System.Drawing.Size(106, 13);
+            this.labelViewHistory.TabIndex = 0;
+            this.labelViewHistory.Text = "История переходов";
+            // 
+            // listBoxViewHistory
+            // 
+            this.listBoxViewHistory.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listBoxViewHistory.FormattingEnabled = true;
+            this.listBoxViewHistory.Location = new System.Drawing.Point(0, 21);
+            this.listBoxViewHistory.Name = "listBoxViewHistory";
+            this.listBoxViewHistory.Size = new System.Drawing.Size(303, 82);
+            this.listBoxViewHistory.TabIndex = 1;
+            // 
             // FrmMainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -321,12 +377,18 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.pnlChooseDate.ResumeLayout(false);
-            this.pnlChooseDate.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fctbSrcCode)).EndInit();
             this.pnlLogView.ResumeLayout(false);
             this.pnlLogView.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bsConnections)).EndInit();
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
+            this.pnlTreeObjLabel.ResumeLayout(false);
+            this.pnlTreeObjLabel.PerformLayout();
+            this.pnlViewHistoryLabel.ResumeLayout(false);
+            this.pnlViewHistoryLabel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -344,13 +406,10 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Panel pnlChooseDate;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel pnlLogView;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
-        private System.Windows.Forms.TreeView treeObj;
         private FastColoredTextBoxNS.FastColoredTextBox fctbSrcCode;
         private System.Windows.Forms.ImageList objectTreeViewImageList;
         private System.Windows.Forms.ToolStripTextBox tstbObjectName;
@@ -358,6 +417,13 @@
         private System.Windows.Forms.ToolStripMenuItem setupConnectionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripComboBox cbConnection;
         private System.Windows.Forms.BindingSource bsConnections;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.TreeView treeObj;
+        private System.Windows.Forms.Panel pnlTreeObjLabel;
+        private System.Windows.Forms.Label labelTreeObj;
+        private System.Windows.Forms.Panel pnlViewHistoryLabel;
+        private System.Windows.Forms.Label labelViewHistory;
+        private System.Windows.Forms.ListBox listBoxViewHistory;
     }
 }
 

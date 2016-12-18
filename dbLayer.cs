@@ -215,7 +215,7 @@ namespace dbShowDepends
 
             string objectType = GetObjectType(objName);
             
-            // Для таблицы пробуем получить списое её триггеров
+            // Для таблицы пробуем получить список её триггеров
             if (objectType == "U")
             {
                 recs.AddRange(GetTableTriggers(objName));
@@ -269,6 +269,8 @@ namespace dbShowDepends
 
             if (objType == "U") /* user table */
                 sQuery = dbQueries.showTableSource;
+            else if (objType == "TT") /* table type */
+                sQuery = dbQueries.showTableTypeSource;
             else
                 sQuery = dbQueries.showSource;
 
