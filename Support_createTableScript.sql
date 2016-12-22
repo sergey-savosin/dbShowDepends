@@ -25,12 +25,14 @@ rownum: 0:4 - параметры до запроса
 
 		7000 - закрытие выражения CREATE TABLE
 
-		7001:267500 (1042*250) - описание индексов:
+		7001:267500 (1043*250) - описание индексов:
 				7001 - шапка
 				7002-7017 (16) - столбцы в ключе индекса
 				7018 - шапка INCLUDE
 				7019-8041 (1023) - столбцы в include
-				8042 - подвал индекса
+				ToDo: подвал INCLUDE
+				8042 - where-секция
+				8043 - подвал индекса
 
 				Индексов может быть <= 250 штук, ключевых столбцов <= 16, include-столбцов <= 1023.
 
@@ -52,7 +54,7 @@ rownum: 0:4 - параметры до запроса
  ******************************************/
 
 set nocount on
---declare @ObjectName sysname = 'dbo.DescriptTable'
+--declare @ObjectName sysname = 'dbo.Products'
 
 /* входящие объекты */
 declare @objects table (
@@ -386,7 +388,8 @@ SELECT
 	CAST(INDEXPROPERTY(i.object_id, i.name, N'IsPadIndex') AS bit) AS [PadIndex],
 	~i.allow_row_locks AS [DisallowRowLocks],
 	~i.allow_page_locks AS [DisallowPageLocks],
-	s.no_recompute AS [NoAutomaticRecomputation]
+	s.no_recompute AS [NoAutomaticRecomputation],
+	ISNULL(i.filter_definition, N'') AS [FilterDefinition]
 INTO
 	#index_name
 FROM
@@ -545,7 +548,7 @@ insert @output (
 select
 	sName,
 	tName,
-	7001 +1042*(rn-1) as rownum,
+	7001 +1043*(rn-1) as rownum,
 	'index head' as rowtype,
 	0,
 	'CREATE ' +
@@ -569,7 +572,7 @@ union all
 select
 	sName,
 	tName,
-	7018 +1042*(rn-1) as rownum,
+	7018 +1043*(rn-1) as rownum,
 	'index include-section' as rowtype,
 	0,
 	') INCLUDE (',
@@ -588,12 +591,29 @@ where
 	IndexKeyType =0
 	and inclColumns.cnt>0
 
+/* ToDo: подвал include-секции */
+
+/* where-секция */
+union all
+select
+	sName,
+	tName,
+	8042 +1043*(rn-1) as rownum,
+	'index where-section' as rowtype,
+	0,
+	') WHERE ' + iName.FilterDefinition,
+	0
+from
+	#index_name iName
+where
+	iName.FilterDefinition <> ''
+
 /* подвал индекса */
 union all
 select
 	sName,
 	tName,
-	8042 +1042*(rn-1) as rownum,
+	8043 +1043*(rn-1) as rownum,
 	'index footer' as rowtype,
 	0,
 	') ' +
@@ -623,7 +643,7 @@ insert @output (
 select
 	iCols.sName,
 	iCols.tName,
-	7001 +1042 *(iName.rn -1) +iCols.ID, --iCols.ID начинается с 1
+	7001 +1043 *(iName.rn -1) +iCols.ID, --iCols.ID начинается с 1
 	'index key-column',
 	1,
 	'[' +iCols.colName +'] ' +
@@ -658,7 +678,7 @@ union all
 select
 	iCols.sName,
 	iCols.tName,
-	7019 +1042 *(iName.rn -1) +iCols.Included_ID, --iCols.IncludedID начинается с 1
+	7019 +1043 *(iName.rn -1) +iCols.Included_ID, --iCols.IncludedID начинается с 1
 	'index key-column',
 	1,
 	'[' +iCols.colName +']',
