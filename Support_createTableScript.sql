@@ -25,24 +25,25 @@ rownum: 0:4 - параметры до запроса
 
 		7000 - закрытие выражения CREATE TABLE
 
-		7001:267500 (1043*250) - описание индексов:
+		7001:268250 (1045*250) - описание индексов:
 				7001 - шапка
 				7002-7017 (16) - столбцы в ключе индекса
-				7018 - шапка INCLUDE
-				7019-8041 (1023) - столбцы в include
-				ToDo: подвал INCLUDE
-				8042 - where-секция
-				8043 - подвал индекса
+				7018 - подвал ключевых столбцов индекса
+				7019 - шапка INCLUDE
+				7020-8042 (1023) - столбцы в include
+				8043 - подвал INCLUDE
+				8044 - where-секция (выражение фильтра)
+				8045 - подвал индекса
 
 				Индексов может быть <= 250 штук, ключевых столбцов <= 16, include-столбцов <= 1023.
 
-		268001:787156 (2052*253) - описание внешних ключей
-				268001 - шапка
-				268002-269025 (1024) - столбцы таблицы, содержащей внешний ключ
-				269026 - слово REFERENCES
-				269027-270050 (1024) - столбцы таблицы, на которую ссылается ключ
-				270051 - подвал
-				270052 - активация проверки внешнего ключа
+		269001:788156 (2052*253) - описание внешних ключей
+				269001 - шапка
+				269002-270025 (1024) - столбцы таблицы, содержащей внешний ключ
+				270026 - слово REFERENCES
+				270027-270050 (1024) - столбцы таблицы, на которую ссылается ключ
+				271051 - подвал
+				271052 - активация проверки внешнего ключа
 
 				Внешних ключей рекомендуется 253 штуки, столбцов в ключе, как и в ссылаемой таблице, может быть сколько угодно (=1024)
 
@@ -548,7 +549,7 @@ insert @output (
 select
 	sName,
 	tName,
-	7001 +1043*(rn-1) as rownum,
+	7001 +1045*(rn-1) as rownum,
 	'index head' as rowtype,
 	0,
 	'CREATE ' +
@@ -567,15 +568,28 @@ from
 where
 	IndexKeyType =0
 
+/* подвал списка ключевых столбцов индекса */
+union all
+select
+	sName,
+	tName,
+	7018 +1045*(rn-1) as rownum,
+	'index key columns footer section' as rowtype,
+	0,
+	')',
+	0
+from
+	#index_name iName
+
 /* шапка include-секции */
 union all
 select
 	sName,
 	tName,
-	7018 +1043*(rn-1) as rownum,
+	7019 +1045*(rn-1) as rownum,
 	'index include-section' as rowtype,
 	0,
-	') INCLUDE (',
+	'INCLUDE (',
 	0
 from
 	#index_name iName
@@ -592,16 +606,38 @@ where
 	and inclColumns.cnt>0
 
 /* ToDo: подвал include-секции */
-
-/* where-секция */
 union all
 select
 	sName,
 	tName,
-	8042 +1043*(rn-1) as rownum,
-	'index where-section' as rowtype,
+	8043 +1045*(rn-1) as rownum,
+	'index include-footer section' as rowtype,
 	0,
-	') WHERE ' + iName.FilterDefinition,
+	')',
+	0
+from
+	#index_name iName
+	outer apply (
+		select count(1) cnt
+		from #index_columns ic
+		where ic.sName = iName.sName
+			AND ic.tName = iName.tName
+			AND ic.iName = iName.iName
+			AND ic.isIncluded = 1
+	) inclColumns
+where
+	iName.IndexKeyType = 0
+	and inclColumns.cnt > 0
+
+/* where-секция (фильтр индекса) */
+union all
+select
+	sName,
+	tName,
+	8044 +1045*(rn-1) as rownum,
+	'index where-section (index filter)' as rowtype,
+	0,
+	'WHERE ' + iName.FilterDefinition,
 	0
 from
 	#index_name iName
@@ -613,10 +649,9 @@ union all
 select
 	sName,
 	tName,
-	8043 +1043*(rn-1) as rownum,
+	8045 +1045*(rn-1) as rownum,
 	'index footer' as rowtype,
 	0,
-	') ' +
 	case [FillFactor]
 		when 0 then ''
 		else 'WITH (FILLFACTOR=' +cast([FillFactor] as varchar) +') '
@@ -643,7 +678,7 @@ insert @output (
 select
 	iCols.sName,
 	iCols.tName,
-	7001 +1043 *(iName.rn -1) +iCols.ID, --iCols.ID начинается с 1
+	7001 +1045 *(iName.rn -1) +iCols.ID, --iCols.ID начинается с 1
 	'index key-column',
 	1,
 	'[' +iCols.colName +'] ' +
@@ -678,7 +713,7 @@ union all
 select
 	iCols.sName,
 	iCols.tName,
-	7019 +1043 *(iName.rn -1) +iCols.Included_ID, --iCols.IncludedID начинается с 1
+	7020 +1045 *(iName.rn -1) +iCols.Included_ID, --iCols.IncludedID начинается с 1
 	'index key-column',
 	1,
 	'[' +iCols.colName +']',
@@ -743,7 +778,7 @@ insert @output (
 select
 	sName,
 	tName,
-	268001 +2052 *(fkName.rn -1) as rownum,
+	269001 +2052 *(fkName.rn -1) as rownum,
 	'fkey header',
 	0,
 	'ALTER TABLE [' +sName +'].[' +tName +'] WITH ' +
@@ -762,7 +797,7 @@ union all
 select
 	sName,
 	tName,
-	269026 +2052 *(fkName.rn -1),
+	270026 +2052 *(fkName.rn -1),
 	'fkey middle',
 	0,
 	') REFERENCES [' +ReferencedTableSchema +'].[' +ReferencedTable +'] (',
@@ -775,7 +810,7 @@ union all
 select
 	sName,
 	tName,
-	270051 +2052 *(fkName.rn -1),
+	271051 +2052 *(fkName.rn -1),
 	'fkey footer',
 	0,
 	')',
@@ -817,7 +852,7 @@ insert @output (
 select
 	fkName.sName,
 	fkName.tName,
-	268001 +2052 *(fkName.rn -1) +fkCols.ID, --ID начинается с 1
+	269001 +2052 *(fkName.rn -1) +fkCols.ID, --ID начинается с 1
 	'fkey columns',
 	1 as indent,
 	'[' +fkCols.colName +']',
@@ -843,7 +878,7 @@ union all
 select
 	fkName.sName,
 	fkName.tName,
-	269026 +2052 *(fkName.rn -1) +fkCols.ID, --ID начинается с 1
+	270026 +2052 *(fkName.rn -1) +fkCols.ID, --ID начинается с 1
 	'fkey ref-columns',
 	1 as indent,
 	'[' +fkCols.refColName +']',
@@ -878,7 +913,7 @@ insert @output (
 select
 	sName,
 	tName,
-	270052 +2052 *(fkName.rn -1),
+	271052 +2052 *(fkName.rn -1),
 	'fkey check',
 	0,
 	'ALTER TABLE [' +sName +'].[' +tName +'] CHECK CONSTRAINT [' +fkName +']',
@@ -968,34 +1003,14 @@ select
 	o.sqltext +
 	case endtype
 		when 0 then ''
-		when 1 then char(13) +char(10) +'GO'
+		when 1 then char(13) +char(10) +'GO' + char(13) +char(10) + '---------------------------------------------------'
 		when 2 then ','
 	end +
 	char(13) +char(10)
 from @output o
-where left(rowtype,4)<>'fkey'
 order by schemaName, tableName, o.rownum
 
-select
-	@v_fk = @v_fk +
-	space(o.indent) +
-	o.sqltext +
-	case endtype
-		when 0 then ''
-		when 1 then char(13) +char(10) +'GO'
-		when 2 then ','
-	end +
-	char(13) +char(10)
-from @output o
-where left(rowtype,4)='fkey'
-order by schemaName, tableName, o.rownum
-
-
-
-select [definition] =
-	@v +char(13) +char(10) +
-	'---------------------------------------------------' +char(13) +char(10) +
-	@v_fk
+select [definition] = @v
 
 --select *
 --from @output
