@@ -144,8 +144,27 @@ namespace dbShowDepends
                     Font fnt1 = new Font("Terminal", 9, FontStyle.Regular, GraphicsUnit.Pixel);
 
                     g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+
+                    // Раскраска квадратика с типом объекта
+                    Brush brush;
+                    switch (objType)
+                    {
+                        case "P":
+                            brush = Brushes.GreenYellow;
+                            break;
+                        case "U":
+                            brush = Brushes.Pink;
+                            break;
+                        default:
+                            brush = Brushes.White;
+                            break;
+                    }
+                    g.FillRectangle(brush, displayRectangle);
+
+                    // Граница квадратика с типом объекта
                     g.DrawRectangle(penColor, displayRectangle);
 
+                    // Надпись в квадратике
                     string s = string.Format("{0}", objType.ToString());
                     g.DrawString(s, fnt1, Brushes.Black, p, format1);
 
