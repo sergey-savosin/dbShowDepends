@@ -402,6 +402,7 @@ namespace dbShowDepends
             if (e.KeyCode == Keys.Enter)
             {
                 startSearch(tstbObjectName.Text);
+                e.SuppressKeyPress = true;
             }
         }
 
