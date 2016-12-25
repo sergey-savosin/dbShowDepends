@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="changeDB" xml:space="preserve">
-    <value>use &lt;DB&gt;;</value>
+    <value>use [&lt;DB&gt;];</value>
     <comment>changeDB</comment>
   </data>
   <data name="databaseList" xml:space="preserve">
@@ -742,7 +742,7 @@ select
 from
 	#index_name iName
 where
-	IndexKeyType &gt;0
+	iName.IndexKeyType &gt; 0
 
 /* подвал индекса-ограничения: в последней строке запятую можно оставить. Выполняется на mssql2005 */
 union all
@@ -772,7 +772,7 @@ from
 			AND IndexKeyType &gt;0
 	) indexes
 where
-	IndexKeyType&gt;0
+	iName.IndexKeyType &gt; 0
 
 --4b. столбцы индексов-ограничений
 SELECT
@@ -838,7 +838,7 @@ from
 			AND ic.iName = iName.iName
 	) colsCount
 where
-	iName.IndexKeyType&gt;0
+	iName.IndexKeyType &gt; 0
 
 
 --5a. создание индексов
@@ -873,7 +873,7 @@ select
 from
 	#index_name iName
 where
-	IndexKeyType =0
+	iName.IndexKeyType = 0
 
 /* подвал списка ключевых столбцов индекса */
 union all
@@ -887,6 +887,8 @@ select
 	0
 from
 	#index_name iName
+where
+	iName.IndexKeyType = 0
 
 /* шапка include-секции */
 union all
@@ -909,8 +911,8 @@ from
 			AND ic.isIncluded = 1
 	) inclColumns
 where
-	IndexKeyType =0
-	and inclColumns.cnt&gt;0
+	iName.IndexKeyType = 0
+	and inclColumns.cnt &gt; 0
 
 /* ToDo: подвал include-секции */
 union all
@@ -966,9 +968,9 @@ select
 	'ON [' +[FileGroup] +']',
 	1
 from
-	#index_name
+	#index_name iName
 where
-	IndexKeyType=0
+	iName.IndexKeyType = 0
 
 
 -- 5b. столбцы индекса
@@ -1012,7 +1014,7 @@ from
 			AND ic.IsIncluded = 0
 	) colsCount
 where
-	iName.IndexKeyType=0
+	iName.IndexKeyType = 0
 	and iCols.IsIncluded = 0
 
 union all
@@ -1043,7 +1045,7 @@ from
 			AND ic.IsIncluded = 1
 	) colsCount
 where
-	iName.IndexKeyType=0
+	iName.IndexKeyType = 0
 	and iCols.IsIncluded = 1
 
 
@@ -1093,6 +1095,7 @@ select
 			when 1 then 'CHECK '
 			else 'NOCHECK '
 		end +
+		char(13) + char(10) +
 		'ADD CONSTRAINT [' +fkName +'] FOREIGN KEY ('
 	as sqltext,
 	0
@@ -1267,6 +1270,7 @@ select
 			when 0 then 'NOCHECK '
 			else 'CHECK '
 		end +
+		char(13) + char(10) +
 		'ADD CONSTRAINT [' +constrName +'] CHECK ' +
 		case NotForReplication
 			when 1 then 'NOT FOR REPLICATION '
@@ -1315,6 +1319,7 @@ select
 	end +
 	char(13) +char(10)
 from @output o
+where o.rowType &lt;&gt; 'ANSI-params' -- исключаем из вывода на экран
 order by schemaName, tableName, o.rownum
 
 select [definition] = @v
@@ -1325,46 +1330,7 @@ select [definition] = @v
     <comment>Получить скрипт создания таблицы</comment>
   </data>
   <data name="showTableTypeSource" xml:space="preserve">
-    <value>/******************************************
- Описание
-   процедура получения строки создания табличного типа БД
- 
- Аргументы
-   @ObjectName
- 
- Возвращаемое значение
-   сейчас в таблице @output
-
- Примечание
-rownum: 0:4 - параметры до запроса
-
-		5 - выражение CREATE TYPE...
-
-		11:1034 (1024) - описание столбцов (сюда можно добавить выражения default)
-				Столбцов в таблице может быть &lt;=1024.
-
-		2001:6500 (18*250) - описание индексов-ограничений:
-				2001: шапка
-				2002-2017:столбцы
-				2018:подвал
-
-				Индексов может быть &lt;= 250 штук, столбцов &lt;= 16.
-
-		7000 - закрытие выражения CREATE TABLE
-
-		7001:267500 (1042*250) - описание индексов:
-				7001 - шапка
-				7002-7017 (16) - столбцы в ключе индекса
-				7018 - шапка INCLUDE
-				7019-8041 (1023) - столбцы в include
-				8042 - подвал индекса
-
-				Индексов может быть &lt;= 250 штук, ключевых столбцов &lt;= 16, include-столбцов &lt;= 1023.
-
-Что делать с атрибутом столбца таблицы - IsPersistent ?
- ******************************************/
-
-set nocount on
+    <value>set nocount on
 declare @ObjectFullName sysname;
 --set @ObjectFullName = 'dbo.UserTableTypeOne'
 set @ObjectFullName = @ObjectName;
@@ -1986,11 +1952,12 @@ select
 	o.sqltext +
 	case endtype
 		when 0 then ''
-		when 1 then char(13) +char(10) +'GO'
+		when 1 then char(13) +char(10) +'GO' + char(13) +char(10) + '---------------------------------------------------'
 		when 2 then ','
 	end +
 	char(13) +char(10)
 from @output o
+where o.rowType &lt;&gt; 'ANSI-params'
 order by objectFullName, o.rownum
 
 

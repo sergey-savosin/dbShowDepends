@@ -435,7 +435,7 @@ select
 from
 	#index_name iName
 where
-	IndexKeyType >0
+	iName.IndexKeyType > 0
 
 /* подвал индекса-ограничения: в последней строке запятую можно оставить. Выполняется на mssql2005 */
 union all
@@ -465,7 +465,7 @@ from
 			AND IndexKeyType >0
 	) indexes
 where
-	IndexKeyType>0
+	iName.IndexKeyType > 0
 
 --4b. столбцы индексов-ограничений
 SELECT
@@ -531,7 +531,7 @@ from
 			AND ic.iName = iName.iName
 	) colsCount
 where
-	iName.IndexKeyType>0
+	iName.IndexKeyType > 0
 
 
 --5a. создание индексов
@@ -566,7 +566,7 @@ select
 from
 	#index_name iName
 where
-	IndexKeyType =0
+	iName.IndexKeyType = 0
 
 /* подвал списка ключевых столбцов индекса */
 union all
@@ -580,6 +580,8 @@ select
 	0
 from
 	#index_name iName
+where
+	iName.IndexKeyType = 0
 
 /* шапка include-секции */
 union all
@@ -602,8 +604,8 @@ from
 			AND ic.isIncluded = 1
 	) inclColumns
 where
-	IndexKeyType =0
-	and inclColumns.cnt>0
+	iName.IndexKeyType = 0
+	and inclColumns.cnt > 0
 
 /* ToDo: подвал include-секции */
 union all
@@ -659,9 +661,9 @@ select
 	'ON [' +[FileGroup] +']',
 	1
 from
-	#index_name
+	#index_name iName
 where
-	IndexKeyType=0
+	iName.IndexKeyType = 0
 
 
 -- 5b. столбцы индекса
@@ -705,7 +707,7 @@ from
 			AND ic.IsIncluded = 0
 	) colsCount
 where
-	iName.IndexKeyType=0
+	iName.IndexKeyType = 0
 	and iCols.IsIncluded = 0
 
 union all
@@ -736,7 +738,7 @@ from
 			AND ic.IsIncluded = 1
 	) colsCount
 where
-	iName.IndexKeyType=0
+	iName.IndexKeyType = 0
 	and iCols.IsIncluded = 1
 
 
@@ -786,6 +788,7 @@ select
 			when 1 then 'CHECK '
 			else 'NOCHECK '
 		end +
+		char(13) + char(10) +
 		'ADD CONSTRAINT [' +fkName +'] FOREIGN KEY ('
 	as sqltext,
 	0
@@ -960,6 +963,7 @@ select
 			when 0 then 'NOCHECK '
 			else 'CHECK '
 		end +
+		char(13) + char(10) +
 		'ADD CONSTRAINT [' +constrName +'] CHECK ' +
 		case NotForReplication
 			when 1 then 'NOT FOR REPLICATION '
@@ -1008,6 +1012,7 @@ select
 	end +
 	char(13) +char(10)
 from @output o
+where o.rowType <> 'ANSI-params' -- исключаем из вывода на экран
 order by schemaName, tableName, o.rownum
 
 select [definition] = @v

@@ -61,7 +61,7 @@ namespace dbShowDepends {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на use &lt;DB&gt;;.
+        ///   Ищет локализованную строку, похожую на use [&lt;DB&gt;];.
         /// </summary>
         internal static string changeDB {
             get {
@@ -265,28 +265,21 @@ namespace dbShowDepends {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на /******************************************
-        /// Описание
-        ///   процедура получения строки создания табличного типа БД
-        /// 
-        /// Аргументы
-        ///   @ObjectName
-        /// 
-        /// Возвращаемое значение
-        ///   сейчас в таблице @output
+        ///   Ищет локализованную строку, похожую на set nocount on
+        ///declare @ObjectFullName sysname;
+        ///--set @ObjectFullName = &apos;dbo.UserTableTypeOne&apos;
+        ///set @ObjectFullName = @ObjectName;
         ///
-        /// Примечание
-        ///rownum: 0:4 - параметры до запроса
+        ///declare @ObjectFullNameWithBrackets nvarchar(2000);
         ///
-        ///		5 - выражение CREATE TYPE...
-        ///
-        ///		11:1034 (1024) - описание столбцов (сюда можно добавить выражения default)
-        ///				Столбцов в таблице может быть &lt;=1024.
-        ///
-        ///		2001:6500 (18*250) - описание индексов-ограничений:
-        ///				2001: шапка
-        ///				2002-2017:столбцы
-        ///				2 [остаток строки не уместился]&quot;;.
+        ////* исходящие строки */
+        ///declare @output table (
+        ///	objectFullName sysname not null,
+        ///	rownum bigint not null,
+        ///	rowtype varchar(50) not null,
+        ///	indent int default(0), --отступ при форматировании запроса
+        ///	sqltext varchar(max) null,
+        ///	endType tinyint default(0) --тип строки. 0-обычная, 1-после строки GO, 2-после строки за [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string showTableTypeSource {
             get {

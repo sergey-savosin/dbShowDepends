@@ -1,6 +1,6 @@
 ﻿/******************************************
  Описание
-   процедура получения строки создания таблиц БД
+   процедура получения строки создания табличного типа БД
  
  Аргументы
    @ObjectName
@@ -38,20 +38,22 @@ rownum: 0:4 - параметры до запроса
  ******************************************/
 
 set nocount on
-declare @ObjectName sysname = 'UserTableTypeOne'
-declare @ObjectSchemaName sysname = 'dbo'
+declare @ObjectFullName sysname;
+--set @ObjectFullName = 'dbo.UserTableTypeOne'
+set @ObjectFullName = @ObjectName;
+
+declare @ObjectFullNameWithBrackets nvarchar(2000);
 
 /* исходящие строки */
 declare @output table (
-	schemaName sysname not null,
-	objectName sysname not null,
+	objectFullName sysname not null,
 	rownum bigint not null,
 	rowtype varchar(50) not null,
 	indent int default(0), --отступ при форматировании запроса
 	sqltext varchar(max) null,
 	endType tinyint default(0) --тип строки. 0-обычная, 1-после строки GO, 2-после строки запятая
 
-	primary key (schemaName, objectName, rownum)
+	primary key (objectFullName, rownum)
 )
 
 if object_id('tempdb..#ansi_params') is not null
@@ -100,21 +102,21 @@ FROM
 	INNER JOIN sys.schemas AS stt ON stt.schema_id = tt.schema_id
 	LEFT JOIN sys.objects AS obj ON obj.object_id = tt.type_table_object_id
 WHERE
-	tt.name=@ObjectName
-	and SCHEMA_NAME(tt.schema_id)=@ObjectSchemaName
+	SCHEMA_NAME(tt.schema_id) + '.' + tt.name = @ObjectFullName -- название со схемой, но может быть без скобок
 ;
 
+select TOP(1) @ObjectFullNameWithBrackets = '[' + ap.[Schema] + '].['+ ap.[Name] + ']'
+from #ansi_params ap;
+
 insert @output (
-	schemaName,
-	objectName,
+	objectFullName,
 	rownum,
 	rowtype,
 	sqltext,
 	endType
 )
 select
-	[Schema],
-	[Name],
+	@ObjectFullNameWithBrackets,
 	0,
 	'ANSI-params',
 	'SET ANSI_NULLS ON' sqltext,
@@ -123,16 +125,14 @@ from
 	#ansi_params
 
 insert @output (
-	schemaName,
-	objectName,
+	objectFullName,
 	rownum,
 	rowtype,
 	sqltext,
 	endType
 )
 select
-	[Schema],
-	[Name],
+	@ObjectFullNameWithBrackets,
 	1,
 	'ANSI-params',
 	'SET QUOTED_IDENTIFIER ON' sqltext,
@@ -144,37 +144,33 @@ from
 
 --3a. создание названия таблицы
 insert @output (
-	schemaName,
-	objectName,
+	objectFullName,
 	rownum,
 	rowtype,
 	sqltext,
 	endType
 )
 select
-	[Schema],
-	[Name],
+	@ObjectFullNameWithBrackets,
 	5,
-	'tableHeader',
-	'CREATE TABLE [' +[Schema] +'].[' +[Name] +'](',
+	'tableTypeHeader',
+	'CREATE TYPE [' +[Schema] +'].[' +[Name] +'] as TABLE (',
 	0
 from
 	#ansi_params
 
 
 insert @output (
-	schemaName,
-	objectName,
+	objectFullName,
 	rownum,
 	rowtype,
 	sqltext,
 	endType
 )
 select
-	[Schema],
-	[Name],
+	@ObjectFullNameWithBrackets,
 	7000,
-	'tableFooter',
+	'tableTypeFooter',
 	')',
 	1
 from
@@ -183,8 +179,7 @@ from
 
 --3b. создание столбцов таблицы
 SELECT
-	@ObjectName [objectName],
-	@ObjectSchemaName [schemaName],
+	@ObjectFullNameWithBrackets [objectFullName],
 	clmns.name AS [colName],
 	clmns.column_id AS [ID],
 	clmns.object_id as objectId,
@@ -238,15 +233,13 @@ FROM
 	LEFT JOIN sys.xml_schema_collections AS xscclmns ON xscclmns.xml_collection_id = clmns.xml_collection_id
 	LEFT JOIN sys.schemas AS s2clmns ON s2clmns.schema_id = xscclmns.schema_id
 WHERE
-	tt.name=@ObjectName
-and SCHEMA_NAME(tt.schema_id)=@ObjectSchemaName
+	'[' + SCHEMA_NAME(tt.schema_id) + '].[' + tt.name + ']' = @ObjectFullNameWithBrackets
 
 
 
 -- 3c. Default значения
 SELECT
-	@ObjectSchemaName as [schemaName],
-	@ObjectName as [objectName],
+	@ObjectFullNameWithBrackets as [objectFullName],
 	clmns.name as [colName],
 	cstr.name AS [defaultName],
 	CAST(cstr.is_system_named AS BIT) AS [IsSystemNamed],
@@ -258,14 +251,12 @@ FROM
 	INNER JOIN sys.all_columns AS clmns ON clmns.object_id=tt.type_table_object_id
 	INNER JOIN sys.default_constraints AS cstr ON cstr.object_id=clmns.default_object_id
 WHERE
-	tt.name=@ObjectName
-	and SCHEMA_NAME(tt.schema_id)=@ObjectSchemaName
+	'[' + SCHEMA_NAME(tt.schema_id) + '].[' + tt.name + ']' = @ObjectFullNameWithBrackets
 ORDER BY
 	[defaultName] ASC
 
 insert @output (
-	schemaName,
-	objectName,
+	objectFullName,
 	rownum,
 	rowtype,
 	indent,
@@ -273,8 +264,7 @@ insert @output (
 	endType
 )
 select
-	c.schemaName,
-	c.objectName,
+	c.objectFullName,
 	10 +c.ID,--rowid,
 	'columns',
 	1,
@@ -338,14 +328,12 @@ from
 		where ac.object_id = c.objectId
 	) cols
 	LEFT JOIN #colDefaults cd
-		ON cd.schemaName = c.schemaName
-		AND cd.objectName = c.objectName
+		ON cd.objectFullName = c.objectFullName
 		AND cd.colName = c.colName
 
 --4a. список индексов-ограничений (PK, UI)
 SELECT
-	@ObjectName objectName,
-	@ObjectSchemaName schemaName,
+	@ObjectFullNameWithBrackets objectFullName,
 	i.name AS [indexName],
 	Row_Number() Over (Partition by tt.schema_id, tt.name order by i.index_id) rn,
 	Row_Number() Over (Partition by tt.schema_id, tt.name, case when i.is_primary_key=0 and i.is_unique_constraint=0 then 0 else 1 end order by i.index_id) rn_for_comma,
@@ -387,14 +375,12 @@ LEFT JOIN sys.data_spaces AS dstbl ON dstbl.data_space_id = t.Filestream_data_sp
 LEFT JOIN sys.filetable_system_defined_objects AS filetableobj ON i.object_id = filetableobj.object_id
 LEFT JOIN sys.hash_indexes AS hi ON i.object_id = hi.object_id AND i.index_id = hi.index_id
 WHERE
-	tt.name = @ObjectName
-	and SCHEMA_NAME(tt.schema_id) = @ObjectSchemaName
+	'[' + SCHEMA_NAME(tt.schema_id) + '].[' + tt.name + ']' = @ObjectFullNameWithBrackets
 
 
 /* шапка индекса */
 insert @output (
-	schemaName,
-	objectName,
+	objectFullName,
 	rownum,
 	rowtype,
 	indent,
@@ -402,33 +388,30 @@ insert @output (
 	endType
 )
 select
-	schemaName,
-	objectName,
+	objectFullName,
 	2001 +20*(rn-1) as rownum,
 	'constr-index head' as rowtype,
 	1,
-	'CONSTRAINT [' +iName.indexName +'] ' +
-		case IndexKeyType
-			when 1 then 'PRIMARY KEY '
-			when 2 then 'UNIQUE '
-			else '<error>'
-		end +
-		case IsClustered
-			when 1 then 'CLUSTERED'
-			else 'NONCLUSTERED'
-		end +
-		'(',
+	case IndexKeyType
+		when 1 then 'PRIMARY KEY '
+		when 2 then 'UNIQUE '
+		else '<error>'
+	end +
+	case IsClustered
+		when 1 then 'CLUSTERED'
+		else 'NONCLUSTERED'
+	end +
+	'(',
 	0
 from
 	#index_name iName
 where
-	IndexKeyType >0
+	iName.IndexKeyType >0
 
 /* подвал индекса-ограничения: в последней строке запятую можно оставить. Выполняется на mssql2005 */
 union all
 select
-	schemaName,
-	objectName,
+	objectFullName,
 	2018 +20*(rn-1) as rownum,
 	'constr-index footer' as rowtype,
 	1,
@@ -446,20 +429,18 @@ from
 	outer apply (
 		select count(1) cnt
 		from #index_name i
-		where i.schemaName = iName.schemaName
-			AND i.objectName = iName.objectName
-			AND IndexKeyType >0
+		where i.objectFullName = iName.objectFullName
+			AND i.IndexKeyType >0
 	) indexes
 where
-	IndexKeyType>0
+	iName.IndexKeyType>0
 
 
 
 
 --4b. столбцы индексов-ограничений
 SELECT
-	@ObjectName objectName,
-	@ObjectSchemaName schemaName,
+	@ObjectFullNameWithBrackets objectFullName,
 	i.name indexName,
 	clmns.name AS [colName],
 	ic.key_ordinal ID,
@@ -479,16 +460,14 @@ FROM
 	INNER JOIN sys.index_columns AS ic ON (ic.column_id > 0 and (ic.key_ordinal > 0 or ic.partition_ordinal = 0 or ic.is_included_column != 0)) AND (ic.index_id=CAST(i.index_id AS int) AND ic.object_id=i.object_id)
 	INNER JOIN sys.columns AS clmns ON clmns.object_id = ic.object_id and clmns.column_id = ic.column_id
 WHERE
-	tt.name=@ObjectName
-	and SCHEMA_NAME(tt.schema_id)=@ObjectSchemaName
+	'[' + SCHEMA_NAME(tt.schema_id) + '].[' + tt.name + ']' = @ObjectFullNameWithBrackets
 ORDER BY
-	schemaName ASC, objectName ASC, indexName ASC, ic.key_ordinal ASC
+	objectFullName ASC, indexName ASC, ic.key_ordinal ASC
 
 
 
 insert @output (
-	schemaName,
-	objectName,
+	objectFullName,
 	rownum,
 	rowtype,
 	indent,
@@ -496,8 +475,7 @@ insert @output (
 	endType
 )
 select
-	iCols.schemaName,
-	iCols.objectName,
+	iCols.objectFullName,
 	2001 +20 *(iName.rn -1) +iCols.ID, --iCols.ID начинается с 1
 	'constr-index column',
 	2,
@@ -513,14 +491,12 @@ select
 	end
 from
 	#index_name iName
-	INNER JOIN #index_columns iCols ON iCols.schemaName = iName.schemaName
-									AND iCols.objectName = iName.objectName
+	INNER JOIN #index_columns iCols ON iCols.objectFullName = iName.objectFullName
 									AND iCols.indexName = iName.indexName
 	outer apply (
 		select count(1) cnt
 		from #index_columns ic
-		where ic.schemaName = iName.schemaName
-			AND ic.objectName = iName.objectName
+		where ic.objectFullName = iName.objectFullName
 			AND ic.indexName = iName.indexName
 	) colsCount
 where
@@ -531,8 +507,7 @@ where
 
 /* шапка индекса */
 insert @output (
-	schemaName,
-	objectName,
+	objectFullName,
 	rownum,
 	rowtype,
 	indent,
@@ -540,8 +515,7 @@ insert @output (
 	endType
 )
 select
-	schemaName,
-	objectName,
+	objectFullName,
 	7001 +1042*(rn-1) as rownum,
 	'index head' as rowtype,
 	0,
@@ -554,7 +528,7 @@ select
 			when 1 then 'CLUSTERED '
 			else 'NONCLUSTERED '
 		end +
-		'INDEX [' +iName.indexName +'] ON [' +iName.schemaName +'].[' +iName.objectName +'] (',
+		'INDEX [' +iName.indexName +'] ON ' +iName.objectFullName +' (',
 	0
 from
 	#index_name iName
@@ -564,8 +538,7 @@ where
 /* шапка include-секции */
 union all
 select
-	schemaName,
-	objectName,
+	objectFullName,
 	7018 +1042*(rn-1) as rownum,
 	'index include-section' as rowtype,
 	0,
@@ -576,8 +549,7 @@ from
 	outer apply (
 		select count(1) cnt
 		from #index_columns ic
-		where ic.schemaName = iName.schemaName
-			AND ic.objectName = iName.objectName
+		where ic.objectFullName = iName.objectFullName
 			AND ic.indexName = iName.indexName
 			AND ic.isIncluded = 1
 	) inclColumns
@@ -588,8 +560,7 @@ where
 /* подвал индекса */
 union all
 select
-	schemaName,
-	objectName,
+	objectFullName,
 	8042 +1042*(rn-1) as rownum,
 	'index footer' as rowtype,
 	0,
@@ -608,8 +579,7 @@ where
 -- 5b. столбцы индекса
 /* ключевые поля */
 insert @output (
-	schemaName,
-	objectName,
+	objectFullName,
 	rownum,
 	rowtype,
 	indent,
@@ -617,8 +587,7 @@ insert @output (
 	endType
 )
 select
-	iCols.schemaName,
-	iCols.objectName,
+	iCols.objectFullName,
 	7001 +1042 *(iName.rn -1) +iCols.ID, --iCols.ID начинается с 1
 	'index key-column',
 	1,
@@ -634,14 +603,12 @@ select
 	end
 from
 	#index_name iName
-	INNER JOIN #index_columns iCols ON iCols.schemaName = iName.schemaName
-									AND iCols.objectName = iName.objectName
+	INNER JOIN #index_columns iCols ON iCols.objectFullName = iName.objectFullName
 									AND iCols.indexName = iName.indexName
 	outer apply (
 		select count(1) cnt
 		from #index_columns ic
-		where ic.schemaName = iName.schemaName
-			AND ic.objectName = iName.objectName
+		where ic.objectFullName = iName.objectFullName
 			AND ic.indexName = iName.indexName
 			AND ic.IsIncluded = 0
 	) colsCount
@@ -652,8 +619,7 @@ where
 union all
 /* include-поля индекса */
 select
-	iCols.schemaName,
-	iCols.objectName,
+	iCols.objectFullName,
 	7019 +1042 *(iName.rn -1) +iCols.Included_ID, --iCols.IncludedID начинается с 1
 	'index key-column',
 	1,
@@ -665,14 +631,12 @@ select
 	end
 from
 	#index_name iName
-	INNER JOIN #index_columns iCols ON iCols.schemaName = iName.schemaName
-									AND iCols.objectName = iName.objectName
+	INNER JOIN #index_columns iCols ON iCols.objectFullName = iName.objectFullName
 									AND iCols.indexName = iName.indexName
 	outer apply (
 		select count(1) cnt
 		from #index_columns ic
-		where ic.schemaName = iName.schemaName
-			AND ic.objectName = iName.objectName
+		where ic.objectFullName = iName.objectFullName
 			AND ic.indexName = iName.indexName
 			AND ic.IsIncluded = 1
 	) colsCount
@@ -695,18 +659,19 @@ select
 	o.sqltext +
 	case endtype
 		when 0 then ''
-		when 1 then char(13) +char(10) +'GO'
+		when 1 then char(13) +char(10) +'GO' + char(13) +char(10) + '---------------------------------------------------'
 		when 2 then ','
 	end +
 	char(13) +char(10)
 from @output o
-order by schemaName, objectName, o.rownum
+where o.rowType <> 'ANSI-params'
+order by objectFullName, o.rownum
 
 
 
 select [definition] =
 	@v +char(13) +char(10);
 
---select *
---from @output
---order by schemaName, objectName, rownum
+select *
+from @output
+order by objectFullName, rownum
