@@ -160,11 +160,13 @@
     <None Include="Resources\ImageTableSelected.gif" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="findsql.sql" />
     <Content Include="find_weak_objects.sql" />
+    <Content Include="Resources\btnSearch.png" />
+    <Content Include="Resources\btnSearchBySource.png" />
     <Content Include="Support_createTableScript.sql" />
     <Content Include="Support_createTypeTableScript.sql" />
-    <None Include="Resources\btnClear.png" />
-    <Content Include="Resources\btnSearch.png" />
+    <Content Include="Resources\btnClear.png" />
     <Content Include="Resources\ImageEmpty.gif" />
     <Content Include="Resources\ImageEmptySelected.gif" />
     <Content Include="Resources\ImageOther.gif" />

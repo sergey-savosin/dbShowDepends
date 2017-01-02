@@ -44,6 +44,7 @@ namespace dbShowDepends
             this.tstbObjectName = new System.Windows.Forms.ToolStripTextBox();
             this.tsbFindObject = new System.Windows.Forms.ToolStripButton();
             this.tsbClearSearchText = new System.Windows.Forms.ToolStripButton();
+            this.tsbSearchBySource = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -83,7 +84,7 @@ namespace dbShowDepends
             this.actionsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(913, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(942, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -119,10 +120,11 @@ namespace dbShowDepends
             this.toolStripLabel2,
             this.tstbObjectName,
             this.tsbFindObject,
-            this.tsbClearSearchText});
+            this.tsbClearSearchText,
+            this.tsbSearchBySource});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(913, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(942, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -185,13 +187,23 @@ namespace dbShowDepends
             this.tsbClearSearchText.Text = "Очистить строку поиска";
             this.tsbClearSearchText.Click += new System.EventHandler(this.tsbClearSearchText_Click);
             // 
+            // tsbSearchBySource
+            // 
+            this.tsbSearchBySource.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbSearchBySource.Image = global::dbShowDepends.Properties.Resources.btnSearchBySource;
+            this.tsbSearchBySource.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.tsbSearchBySource.Name = "tsbSearchBySource";
+            this.tsbSearchBySource.Size = new System.Drawing.Size(23, 22);
+            this.tsbSearchBySource.Text = "Искать в исходниках";
+            this.tsbSearchBySource.Click += new System.EventHandler(this.tsbFindObject_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 418);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(913, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(942, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -215,8 +227,8 @@ namespace dbShowDepends
             // 
             this.splitContainer1.Panel2.Controls.Add(this.scintillaTextBox);
             this.splitContainer1.Panel2.Controls.Add(this.pnlLogView);
-            this.splitContainer1.Size = new System.Drawing.Size(913, 369);
-            this.splitContainer1.SplitterDistance = 303;
+            this.splitContainer1.Size = new System.Drawing.Size(942, 369);
+            this.splitContainer1.SplitterDistance = 312;
             this.splitContainer1.TabIndex = 3;
             // 
             // splitContainer2
@@ -235,7 +247,7 @@ namespace dbShowDepends
             // 
             this.splitContainer2.Panel2.Controls.Add(this.listBoxViewHistory);
             this.splitContainer2.Panel2.Controls.Add(this.pnlViewHistoryLabel);
-            this.splitContainer2.Size = new System.Drawing.Size(303, 369);
+            this.splitContainer2.Size = new System.Drawing.Size(312, 369);
             this.splitContainer2.SplitterDistance = 262;
             this.splitContainer2.TabIndex = 3;
             // 
@@ -247,7 +259,7 @@ namespace dbShowDepends
             this.treeObj.Location = new System.Drawing.Point(0, 21);
             this.treeObj.Name = "treeObj";
             this.treeObj.SelectedImageIndex = 0;
-            this.treeObj.Size = new System.Drawing.Size(303, 241);
+            this.treeObj.Size = new System.Drawing.Size(312, 241);
             this.treeObj.TabIndex = 2;
             this.treeObj.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.treeObj_AfterExpand);
             this.treeObj.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeObj_AfterSelect);
@@ -265,7 +277,7 @@ namespace dbShowDepends
             this.pnlTreeObjLabel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTreeObjLabel.Location = new System.Drawing.Point(0, 0);
             this.pnlTreeObjLabel.Name = "pnlTreeObjLabel";
-            this.pnlTreeObjLabel.Size = new System.Drawing.Size(303, 21);
+            this.pnlTreeObjLabel.Size = new System.Drawing.Size(312, 21);
             this.pnlTreeObjLabel.TabIndex = 1;
             // 
             // labelTreeObj
@@ -283,7 +295,7 @@ namespace dbShowDepends
             this.listBoxViewHistory.FormattingEnabled = true;
             this.listBoxViewHistory.Location = new System.Drawing.Point(0, 21);
             this.listBoxViewHistory.Name = "listBoxViewHistory";
-            this.listBoxViewHistory.Size = new System.Drawing.Size(303, 82);
+            this.listBoxViewHistory.Size = new System.Drawing.Size(312, 82);
             this.listBoxViewHistory.TabIndex = 1;
             // 
             // pnlViewHistoryLabel
@@ -292,7 +304,7 @@ namespace dbShowDepends
             this.pnlViewHistoryLabel.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlViewHistoryLabel.Location = new System.Drawing.Point(0, 0);
             this.pnlViewHistoryLabel.Name = "pnlViewHistoryLabel";
-            this.pnlViewHistoryLabel.Size = new System.Drawing.Size(303, 21);
+            this.pnlViewHistoryLabel.Size = new System.Drawing.Size(312, 21);
             this.pnlViewHistoryLabel.TabIndex = 0;
             // 
             // labelViewHistory
@@ -313,8 +325,45 @@ namespace dbShowDepends
             this.scintillaTextBox.Margins.Margin1.AutoToggleMarkerNumber = 0;
             this.scintillaTextBox.Margins.Margin1.IsClickable = true;
             this.scintillaTextBox.Margins.Margin2.Width = 16;
+            this.scintillaTextBox.Markers.Folder.BackColor = System.Drawing.Color.Gray;
+            this.scintillaTextBox.Markers.Folder.ForeColor = System.Drawing.Color.White;
+            this.scintillaTextBox.Markers.Folder.Number = 30;
+            this.scintillaTextBox.Markers.Folder.Symbol = ScintillaNET.MarkerSymbol.BoxPlus;
+            this.scintillaTextBox.Markers.FolderEnd.BackColor = System.Drawing.Color.Gray;
+            this.scintillaTextBox.Markers.FolderEnd.ForeColor = System.Drawing.Color.White;
+            this.scintillaTextBox.Markers.FolderEnd.Number = 25;
+            this.scintillaTextBox.Markers.FolderEnd.Symbol = ScintillaNET.MarkerSymbol.BoxPlusConnected;
+            this.scintillaTextBox.Markers.FolderOpen.BackColor = System.Drawing.Color.Gray;
+            this.scintillaTextBox.Markers.FolderOpen.ForeColor = System.Drawing.Color.White;
+            this.scintillaTextBox.Markers.FolderOpen.Number = 31;
+            this.scintillaTextBox.Markers.FolderOpen.Symbol = ScintillaNET.MarkerSymbol.BoxMinus;
+            this.scintillaTextBox.Markers.FolderOpenMid.BackColor = System.Drawing.Color.Gray;
+            this.scintillaTextBox.Markers.FolderOpenMid.ForeColor = System.Drawing.Color.White;
+            this.scintillaTextBox.Markers.FolderOpenMid.Number = 26;
+            this.scintillaTextBox.Markers.FolderOpenMid.Symbol = ScintillaNET.MarkerSymbol.BoxMinusConnected;
+            this.scintillaTextBox.Markers.FolderOpenMidTail.BackColor = System.Drawing.Color.Gray;
+            this.scintillaTextBox.Markers.FolderOpenMidTail.ForeColor = System.Drawing.Color.White;
+            this.scintillaTextBox.Markers.FolderOpenMidTail.Number = 27;
+            this.scintillaTextBox.Markers.FolderOpenMidTail.Symbol = ScintillaNET.MarkerSymbol.TCorner;
+            this.scintillaTextBox.Markers.FolderSub.BackColor = System.Drawing.Color.Gray;
+            this.scintillaTextBox.Markers.FolderSub.ForeColor = System.Drawing.Color.White;
+            this.scintillaTextBox.Markers.FolderSub.Number = 29;
+            this.scintillaTextBox.Markers.FolderSub.Symbol = ScintillaNET.MarkerSymbol.VLine;
+            this.scintillaTextBox.Markers.FolderTail.BackColor = System.Drawing.Color.Gray;
+            this.scintillaTextBox.Markers.FolderTail.ForeColor = System.Drawing.Color.White;
+            this.scintillaTextBox.Markers.FolderTail.Number = 28;
+            this.scintillaTextBox.Markers.FolderTail.Symbol = ScintillaNET.MarkerSymbol.LCorner;
             this.scintillaTextBox.Name = "scintillaTextBox";
-            this.scintillaTextBox.Size = new System.Drawing.Size(606, 348);
+            this.scintillaTextBox.Size = new System.Drawing.Size(626, 348);
+            this.scintillaTextBox.Styles.BraceBad.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
+            this.scintillaTextBox.Styles.BraceLight.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
+            this.scintillaTextBox.Styles.CallTip.FontName = "Segoe UI\0\0\0\0\0\0\0\0\0\0\0\0";
+            this.scintillaTextBox.Styles.ControlChar.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
+            this.scintillaTextBox.Styles.Default.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
+            this.scintillaTextBox.Styles.IndentGuide.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
+            this.scintillaTextBox.Styles.LastPredefined.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
+            this.scintillaTextBox.Styles.LineNumber.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
+            this.scintillaTextBox.Styles.Max.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
             this.scintillaTextBox.TabIndex = 1;
             this.scintillaTextBox.Text = "select * from ...";
             // 
@@ -324,7 +373,7 @@ namespace dbShowDepends
             this.pnlLogView.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlLogView.Location = new System.Drawing.Point(0, 0);
             this.pnlLogView.Name = "pnlLogView";
-            this.pnlLogView.Size = new System.Drawing.Size(606, 21);
+            this.pnlLogView.Size = new System.Drawing.Size(626, 21);
             this.pnlLogView.TabIndex = 0;
             // 
             // label2
@@ -340,7 +389,7 @@ namespace dbShowDepends
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(913, 440);
+            this.ClientSize = new System.Drawing.Size(942, 440);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
@@ -406,6 +455,7 @@ namespace dbShowDepends
         private System.Windows.Forms.Label labelViewHistory;
         private System.Windows.Forms.ListBox listBoxViewHistory;
         private ScintillaNET.Scintilla scintillaTextBox;
+        private System.Windows.Forms.ToolStripButton tsbSearchBySource;
     }
 }
 

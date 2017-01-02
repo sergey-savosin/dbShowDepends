@@ -157,7 +157,7 @@ namespace dbShowDepends {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на --declare @SearchName sysname;
+        ///   Ищет локализованную строку, похожую на --declare @SearchText sysname;
         ///
         ///select SCHEMA_NAME(o.schema_id) + &apos;.&apos;+ OBJECT_NAME(o.object_id) FullName
         ///, DB_NAME() DatabaseName
@@ -165,7 +165,7 @@ namespace dbShowDepends {
         ///, o.type_desc
         ///, o.modify_date
         ///from sys.objects o
-        ///where o.name like &apos;%&apos; + isnull(@SearchName,&apos;&apos;) + &apos;%&apos;
+        ///where o.name like &apos;%&apos; + isnull(@SearchText,&apos;&apos;) + &apos;%&apos;
         ///  AND o.type not in (&apos;S&apos;, &apos;IT&apos;, &apos;SQ&apos;)
         ///  AND o.type IN (&lt;objTypes&gt;)
         ///  and o.is_ms_shipped = 0
@@ -180,6 +180,34 @@ namespace dbShowDepends {
         internal static string objectList {
             get {
                 return ResourceManager.GetString("objectList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на --declare @SearchText varchar(max) = &apos;data&apos;;
+        ///
+        ///with cte as
+        ///(
+        ///select
+        ///	SCHEMA_NAME(o.schema_id) schema_name,
+        ///	o.name object_name,
+        ///	o.type object_type,
+        ///	o.type_desc object_type_desc,
+        ///	o.modify_date,
+        ///	m.definition [definition],
+        ///	left(m.definition, 100) start_definition,
+        ///	PATINDEX(&apos;%&apos; + @SearchText + &apos;%&apos;, m.definition) found_definition_index
+        ///from sys.sql_modules m
+        ///	inner join sys.objects o on o.object_id = m.object_id
+        ///WHERE
+        ///	m.definition like &apos;%&apos; + @SearchText + &apos;%&apos;
+        ///	--AND o.type = &apos;P&apos;
+        ///)
+        ///select [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string objectSearchBySource {
+            get {
+                return ResourceManager.GetString("objectSearchBySource", resourceCulture);
             }
         }
         

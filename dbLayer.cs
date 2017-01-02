@@ -131,17 +131,17 @@ namespace dbShowDepends
         }
 
         // Поиск объектов по переданной строке
-        public List<DbDataRecord> GetObjectList(string searchName, List<DbObjectType> objTypes)
+        public List<DbDataRecord> GetObjectList(string searchText, List<DbObjectType> objTypes, bool searchBySource)
         {
             string sqlTypes = string.Join(" ,", objTypes.Select(c => "'" + c + "'"));
 
             var recs = new List<DbDataRecord>();
-            string sQuery = dbQueries.objectList;
+            string sQuery = searchBySource ? dbQueries.objectSearchBySource : dbQueries.objectList;
             sQuery = sQuery.Replace("<objTypes>", sqlTypes);
 
             var scom = new SqlCommand(sQuery, sc) { CommandType = CommandType.Text };
-            scom.Parameters.Add("@SearchName", SqlDbType.VarChar, 250);
-            scom.Parameters["@SearchName"].Value = searchName;
+            scom.Parameters.Add("@SearchText", SqlDbType.VarChar, 250);
+            scom.Parameters["@SearchText"].Value = searchText;
 
 
             using (var reader = scom.ExecuteReader())

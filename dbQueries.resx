@@ -189,7 +189,7 @@ where schema_name(tt.schema_id) + '.' + tt.name = @ObjectName</value>
     <comment>Получить тип объекта</comment>
   </data>
   <data name="objectList" xml:space="preserve">
-    <value>--declare @SearchName sysname;
+    <value>--declare @SearchText sysname;
 
 select SCHEMA_NAME(o.schema_id) + '.'+ OBJECT_NAME(o.object_id) FullName
 , DB_NAME() DatabaseName
@@ -197,7 +197,7 @@ select SCHEMA_NAME(o.schema_id) + '.'+ OBJECT_NAME(o.object_id) FullName
 , o.type_desc
 , o.modify_date
 from sys.objects o
-where o.name like '%' + isnull(@SearchName,'') + '%'
+where o.name like '%' + isnull(@SearchText,'') + '%'
   AND o.type not in ('S', 'IT', 'SQ')
   AND o.type IN (&lt;objTypes&gt;)
   and o.is_ms_shipped = 0
@@ -211,11 +211,39 @@ select schema_name(tt.schema_id) + '.' + tt.name FullName
 , obj.modify_date
 from sys.table_types tt
 LEFT JOIN sys.objects AS obj ON obj.object_id = tt.type_table_object_id
-where tt.name like '%' + isnull(@SearchName, '') + '%'
+where tt.name like '%' + isnull(@SearchText, '') + '%'
   AND obj.type IN (&lt;objTypes&gt;)
 
 order by FullName;</value>
     <comment>objectList</comment>
+  </data>
+  <data name="objectSearchBySource" xml:space="preserve">
+    <value>--declare @SearchText varchar(max) = 'data';
+
+with cte as
+(
+select
+	SCHEMA_NAME(o.schema_id) schema_name,
+	o.name object_name,
+	o.type object_type,
+	o.type_desc object_type_desc,
+	o.modify_date,
+	m.definition [definition],
+	left(m.definition, 100) start_definition,
+	PATINDEX('%' + @SearchText + '%', m.definition) found_definition_index
+from sys.sql_modules m
+	inner join sys.objects o on o.object_id = m.object_id
+WHERE
+	m.definition like '%' + @SearchText + '%'
+	--AND o.type = 'P'
+)
+select cte.schema_name + '.' + cte.object_name [FullName],
+	DB_NAME() DatabaseName,
+	cte.object_type [type],
+	cte.object_type_desc [type_desc],
+	cte.modify_date
+from cte
+order by 1, 2</value>
   </data>
   <data name="prepareWeakObjects" xml:space="preserve">
     <value>-- поиск "плохих" объектов

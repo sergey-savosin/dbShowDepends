@@ -231,7 +231,9 @@ namespace dbShowDepends
         // Начать поиск объектов
         private void tsbFindObject_Click(object sender, EventArgs e)
         {
-            startSearch(tstbObjectName.Text);
+            string s = ((ToolStripButton)sender).Name;
+            bool searchBySource = s == "tsbSearchBySource" ? true : false;
+            startSearch(tstbObjectName.Text, searchBySource);
         }
 
         // Поиск дочерних элементов текущего узла дерева
@@ -370,7 +372,7 @@ namespace dbShowDepends
             return typeIndex * 2 + (isSelected ? 1 : 0);
         }
 
-        private void startSearch(string searchString)
+        private void startSearch(string searchString, bool searchBySource)
         {
             var dbList = new List<string>();
 
@@ -387,7 +389,7 @@ namespace dbShowDepends
                 objTypes.Add(DbObjectType.TR);
                 objTypes.Add(DbObjectType.TT);
 
-                var res = getDbLayer().GetObjectList(searchString, objTypes);
+                var res = getDbLayer().GetObjectList(searchString, objTypes, searchBySource);
 
                 foreach (var r in res)
                 {
@@ -415,8 +417,9 @@ namespace dbShowDepends
         {
             if (e.KeyCode == Keys.Enter)
             {
-                startSearch(tstbObjectName.Text);
-                e.SuppressKeyPress = true;
+                bool searchBySource = false; // Поиск по имени объекта
+                startSearch(tstbObjectName.Text, searchBySource);
+                e.SuppressKeyPress = true; //чтобы не тренькал звук windows
             }
         }
 
