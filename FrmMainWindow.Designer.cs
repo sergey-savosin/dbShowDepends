@@ -1,4 +1,5 @@
-﻿namespace dbShowDepends
+﻿
+namespace dbShowDepends
 {
     partial class FrmMainWindow
     {
@@ -46,18 +47,18 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.treeObj = new System.Windows.Forms.TreeView();
             this.objectTreeViewImageList = new System.Windows.Forms.ImageList(this.components);
-            this.fctbSrcCode = new FastColoredTextBoxNS.FastColoredTextBox();
+            this.pnlTreeObjLabel = new System.Windows.Forms.Panel();
+            this.labelTreeObj = new System.Windows.Forms.Label();
+            this.listBoxViewHistory = new System.Windows.Forms.ListBox();
+            this.pnlViewHistoryLabel = new System.Windows.Forms.Panel();
+            this.labelViewHistory = new System.Windows.Forms.Label();
+            this.scintillaTextBox = new ScintillaNET.Scintilla();
             this.pnlLogView = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.bsConnections = new System.Windows.Forms.BindingSource(this.components);
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.treeObj = new System.Windows.Forms.TreeView();
-            this.pnlTreeObjLabel = new System.Windows.Forms.Panel();
-            this.labelTreeObj = new System.Windows.Forms.Label();
-            this.pnlViewHistoryLabel = new System.Windows.Forms.Panel();
-            this.labelViewHistory = new System.Windows.Forms.Label();
-            this.listBoxViewHistory = new System.Windows.Forms.ListBox();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -65,15 +66,15 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fctbSrcCode)).BeginInit();
-            this.pnlLogView.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bsConnections)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.pnlTreeObjLabel.SuspendLayout();
             this.pnlViewHistoryLabel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scintillaTextBox)).BeginInit();
+            this.pnlLogView.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bsConnections)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -212,69 +213,11 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.fctbSrcCode);
+            this.splitContainer1.Panel2.Controls.Add(this.scintillaTextBox);
             this.splitContainer1.Panel2.Controls.Add(this.pnlLogView);
             this.splitContainer1.Size = new System.Drawing.Size(913, 369);
             this.splitContainer1.SplitterDistance = 303;
             this.splitContainer1.TabIndex = 3;
-            // 
-            // objectTreeViewImageList
-            // 
-            this.objectTreeViewImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("objectTreeViewImageList.ImageStream")));
-            this.objectTreeViewImageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.objectTreeViewImageList.Images.SetKeyName(0, "ImageEmpty.gif");
-            this.objectTreeViewImageList.Images.SetKeyName(1, "ImageEmptySelected.gif");
-            // 
-            // fctbSrcCode
-            // 
-            this.fctbSrcCode.AutoCompleteBracketsList = new char[] {
-        '(',
-        ')',
-        '{',
-        '}',
-        '[',
-        ']',
-        '\"',
-        '\"',
-        '\'',
-        '\''};
-            this.fctbSrcCode.AutoScrollMinSize = new System.Drawing.Size(163, 14);
-            this.fctbSrcCode.BackBrush = null;
-            this.fctbSrcCode.CharHeight = 14;
-            this.fctbSrcCode.CharWidth = 8;
-            this.fctbSrcCode.CommentPrefix = "--";
-            this.fctbSrcCode.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.fctbSrcCode.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.fctbSrcCode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.fctbSrcCode.Font = new System.Drawing.Font("Courier New", 9.75F);
-            this.fctbSrcCode.IsReplaceMode = false;
-            this.fctbSrcCode.Location = new System.Drawing.Point(0, 21);
-            this.fctbSrcCode.Name = "fctbSrcCode";
-            this.fctbSrcCode.Paddings = new System.Windows.Forms.Padding(0);
-            this.fctbSrcCode.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
-            this.fctbSrcCode.Size = new System.Drawing.Size(606, 348);
-            this.fctbSrcCode.TabIndex = 1;
-            this.fctbSrcCode.Text = "select * from ...";
-            this.fctbSrcCode.Zoom = 100;
-            this.fctbSrcCode.SelectionChangedDelayed += new System.EventHandler(this.fctbSrcCode_SelectionChangedDelayed);
-            // 
-            // pnlLogView
-            // 
-            this.pnlLogView.Controls.Add(this.label2);
-            this.pnlLogView.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlLogView.Location = new System.Drawing.Point(0, 0);
-            this.pnlLogView.Name = "pnlLogView";
-            this.pnlLogView.Size = new System.Drawing.Size(606, 21);
-            this.pnlLogView.TabIndex = 0;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 5);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(82, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Текст объекта";
             // 
             // splitContainer2
             // 
@@ -309,6 +252,13 @@
             this.treeObj.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.treeObj_AfterExpand);
             this.treeObj.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeObj_AfterSelect);
             // 
+            // objectTreeViewImageList
+            // 
+            this.objectTreeViewImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("objectTreeViewImageList.ImageStream")));
+            this.objectTreeViewImageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.objectTreeViewImageList.Images.SetKeyName(0, "ImageEmpty.gif");
+            this.objectTreeViewImageList.Images.SetKeyName(1, "ImageEmptySelected.gif");
+            // 
             // pnlTreeObjLabel
             // 
             this.pnlTreeObjLabel.Controls.Add(this.labelTreeObj);
@@ -326,6 +276,15 @@
             this.labelTreeObj.Size = new System.Drawing.Size(106, 13);
             this.labelTreeObj.TabIndex = 0;
             this.labelTreeObj.Text = "Список найденного";
+            // 
+            // listBoxViewHistory
+            // 
+            this.listBoxViewHistory.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listBoxViewHistory.FormattingEnabled = true;
+            this.listBoxViewHistory.Location = new System.Drawing.Point(0, 21);
+            this.listBoxViewHistory.Name = "listBoxViewHistory";
+            this.listBoxViewHistory.Size = new System.Drawing.Size(303, 82);
+            this.listBoxViewHistory.TabIndex = 1;
             // 
             // pnlViewHistoryLabel
             // 
@@ -345,14 +304,37 @@
             this.labelViewHistory.TabIndex = 0;
             this.labelViewHistory.Text = "История переходов";
             // 
-            // listBoxViewHistory
+            // scintillaTextBox
             // 
-            this.listBoxViewHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBoxViewHistory.FormattingEnabled = true;
-            this.listBoxViewHistory.Location = new System.Drawing.Point(0, 21);
-            this.listBoxViewHistory.Name = "listBoxViewHistory";
-            this.listBoxViewHistory.Size = new System.Drawing.Size(303, 82);
-            this.listBoxViewHistory.TabIndex = 1;
+            this.scintillaTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.scintillaTextBox.Folding.MarkerScheme = ScintillaNET.FoldMarkerScheme.Custom;
+            this.scintillaTextBox.LineWrapping.VisualFlags = ScintillaNET.LineWrappingVisualFlags.End;
+            this.scintillaTextBox.Location = new System.Drawing.Point(0, 21);
+            this.scintillaTextBox.Margins.Margin1.AutoToggleMarkerNumber = 0;
+            this.scintillaTextBox.Margins.Margin1.IsClickable = true;
+            this.scintillaTextBox.Margins.Margin2.Width = 16;
+            this.scintillaTextBox.Name = "scintillaTextBox";
+            this.scintillaTextBox.Size = new System.Drawing.Size(606, 348);
+            this.scintillaTextBox.TabIndex = 1;
+            this.scintillaTextBox.Text = "select * from ...";
+            // 
+            // pnlLogView
+            // 
+            this.pnlLogView.Controls.Add(this.label2);
+            this.pnlLogView.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlLogView.Location = new System.Drawing.Point(0, 0);
+            this.pnlLogView.Name = "pnlLogView";
+            this.pnlLogView.Size = new System.Drawing.Size(606, 21);
+            this.pnlLogView.TabIndex = 0;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 5);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(82, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Текст объекта";
             // 
             // FrmMainWindow
             // 
@@ -377,10 +359,6 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.fctbSrcCode)).EndInit();
-            this.pnlLogView.ResumeLayout(false);
-            this.pnlLogView.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bsConnections)).EndInit();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
@@ -389,6 +367,10 @@
             this.pnlTreeObjLabel.PerformLayout();
             this.pnlViewHistoryLabel.ResumeLayout(false);
             this.pnlViewHistoryLabel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scintillaTextBox)).EndInit();
+            this.pnlLogView.ResumeLayout(false);
+            this.pnlLogView.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bsConnections)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -410,7 +392,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
-        private FastColoredTextBoxNS.FastColoredTextBox fctbSrcCode;
         private System.Windows.Forms.ImageList objectTreeViewImageList;
         private System.Windows.Forms.ToolStripTextBox tstbObjectName;
         private System.Windows.Forms.ToolStripButton tsbClearSearchText;
@@ -424,6 +405,7 @@
         private System.Windows.Forms.Panel pnlViewHistoryLabel;
         private System.Windows.Forms.Label labelViewHistory;
         private System.Windows.Forms.ListBox listBoxViewHistory;
+        private ScintillaNET.Scintilla scintillaTextBox;
     }
 }
 

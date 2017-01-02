@@ -5,15 +5,17 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Data.Common;
 using System.Diagnostics;
-using FastColoredTextBoxNS;
+//using FastColoredTextBoxNS;
 using dbShowDepends.Data;
 using dbShowDepends.Settings;
+
 
 namespace dbShowDepends
 {
     public partial class FrmMainWindow : Form
     {
-        MarkerStyle SameWordsStyle = new MarkerStyle(new SolidBrush(Color.FromArgb(40, Color.Gray)));
+        //MarkerStyle SameWordsStyle = new MarkerStyle(new SolidBrush(Color.FromArgb(40, Color.Gray)));
+        private const int LINE_NUMBERS_MARGIN_WIDTH = 35; // TODO Don't hardcode this
 
         private DbLayer _dbLayer;
         private SetupConnectionCollection connectionCollection;
@@ -99,9 +101,17 @@ namespace dbShowDepends
             //cbConnection.ComboBox.DisplayMember = "ConnectionName";
             //cbConnection.ComboBox.Width *= 2;
 
-            init_fctbSrcCode();
+            //init_fctbSrcCode();
+            SetLanguage("mssql");
             init_imageList();
         }
+        private void SetLanguage(string language)
+        {
+            // Use a built-in lexer and configuration
+            scintillaTextBox.ConfigurationManager.Language = language;
+            scintillaTextBox.Margins.Margin0.Width = LINE_NUMBERS_MARGIN_WIDTH;
+        }
+
 
         private void FrmMainWindow_Load(object sender, EventArgs e)
         {
@@ -271,9 +281,11 @@ namespace dbShowDepends
                     dbName = tscbDatabaseName.Text;
                 
                 var src = getDbLayer(dbName).GetObjectSource(objName, ref objType);
-                
-                fctbSrcCode.Clear();
-                fctbSrcCode.Text = src;
+
+                scintillaTextBox.Text = "";
+                scintillaTextBox.Text = src;
+                //fctbSrcCode.Clear();
+                //fctbSrcCode.Text = src;
 
                 // обновить иконку объекта после считывания дополнительной информации
                 if (!string.IsNullOrEmpty(objType))
@@ -296,16 +308,17 @@ namespace dbShowDepends
         private void init_fctbSrcCode()
         {
             //set language
-            fctbSrcCode.ClearStylesBuffer();
-            fctbSrcCode.Range.ClearStyle(FastColoredTextBoxNS.StyleIndex.All);
+            //fctbSrcCode.ClearStylesBuffer();
+            //fctbSrcCode.Range.ClearStyle(FastColoredTextBoxNS.StyleIndex.All);
             //
 
-            fctbSrcCode.Language = Language.SQL;
-            fctbSrcCode.OnSyntaxHighlight(new TextChangedEventArgs(fctbSrcCode.Range));
+            //fctbSrcCode.Language = Language.SQL;
+            //fctbSrcCode.OnSyntaxHighlight(new TextChangedEventArgs(fctbSrcCode.Range));
         }
 
         private void fctbSrcCode_SelectionChangedDelayed(object sender, EventArgs e)
         {
+            /*
             fctbSrcCode.VisibleRange.ClearStyle(SameWordsStyle);
             if (!fctbSrcCode.Selection.IsEmpty)
                 return;//user selected diapason
@@ -334,6 +347,7 @@ namespace dbShowDepends
             if(ranges.Length>1)
             foreach(var r in ranges)
                 r.SetStyle(SameWordsStyle);
+            */
         }
 
         private int getTreeObjColorIndex(string objType, bool isSelected)
