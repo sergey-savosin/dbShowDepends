@@ -355,15 +355,6 @@ namespace dbShowDepends
             this.scintillaTextBox.Markers.FolderTail.Symbol = ScintillaNET.MarkerSymbol.LCorner;
             this.scintillaTextBox.Name = "scintillaTextBox";
             this.scintillaTextBox.Size = new System.Drawing.Size(626, 348);
-            this.scintillaTextBox.Styles.BraceBad.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
-            this.scintillaTextBox.Styles.BraceLight.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
-            this.scintillaTextBox.Styles.CallTip.FontName = "Segoe UI\0\0\0\0\0\0\0\0\0\0\0\0";
-            this.scintillaTextBox.Styles.ControlChar.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
-            this.scintillaTextBox.Styles.Default.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
-            this.scintillaTextBox.Styles.IndentGuide.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
-            this.scintillaTextBox.Styles.LastPredefined.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
-            this.scintillaTextBox.Styles.LineNumber.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
-            this.scintillaTextBox.Styles.Max.FontName = "Verdana\0\0\0\0\0\0\0\0\0\0\0\0\0";
             this.scintillaTextBox.TabIndex = 1;
             this.scintillaTextBox.Text = "select * from ...";
             // 
