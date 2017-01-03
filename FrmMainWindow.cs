@@ -104,6 +104,8 @@ namespace dbShowDepends
             //init_fctbSrcCode();
             SetLanguage("mssql");
             init_imageList();
+            incrementalSearcher1.Scintilla = scintillaTextBox;
+            incrementalSearcher1.Searcher.AutoPosition = false; // Чтобы элемент не пропадал из тулбара
         }
         private void SetLanguage(string language)
         {
