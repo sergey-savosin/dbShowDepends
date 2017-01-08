@@ -19,6 +19,7 @@ namespace dbShowDepends
 
         private DbLayer _dbLayer;
         private SetupConnectionCollection connectionCollection;
+        private string m_globalSearchString;
 
         // БД выбирается из настройки
         private DbLayer getDbLayer()
@@ -30,6 +31,10 @@ namespace dbShowDepends
         private DbLayer getDbLayer(string DbName)
         {
             SetupConnection cn = (SetupConnection)cbConnection.SelectedItem;
+            if (cn == null)
+            {
+                throw new Exception("Настройте соединение к базе данных!");
+            }
             string cnStr = cn.ServerName;
             if (string.IsNullOrWhiteSpace(DbName))
                 DbName = cn.DbName;
@@ -225,7 +230,7 @@ namespace dbShowDepends
             catch (Exception ex)
             {
                 tscbDatabaseName.Items.Add("<error>");
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message, "DatabaseName DropDown event");
             }
 
         }
@@ -234,8 +239,24 @@ namespace dbShowDepends
         private void tsbFindObject_Click(object sender, EventArgs e)
         {
             string s = ((ToolStripButton)sender).Name;
-            bool searchBySource = s == "tsbSearchBySource" ? true : false;
-            startSearch(tstbObjectName.Text, searchBySource);
+            string textToSearch = tstbObjectName.Text;
+            bool isSearchBySource = s == "tsbSearchBySource" ? true : false;
+
+            // Пустой строку игнорируем для поиска по исходникам
+            if (isSearchBySource && string.IsNullOrEmpty(textToSearch))
+            {
+                MessageBox.Show("Text to search is empty!", "Starting search");
+                return;
+            }
+
+            // Задание глобальной переменной поиска
+            if (isSearchBySource)
+                m_globalSearchString = textToSearch;
+            else
+                m_globalSearchString = "";
+
+            // Запуск поиска
+            startSearch(textToSearch, isSearchBySource);
         }
 
         // Поиск дочерних элементов текущего узла дерева
@@ -286,10 +307,19 @@ namespace dbShowDepends
                 
                 var src = getDbLayer(dbName).GetObjectSource(objName, ref objType);
 
+                // Вывод текста объекта в текстовый контрол
                 scintillaTextBox.Text = "";
                 scintillaTextBox.Text = src;
                 //fctbSrcCode.Clear();
                 //fctbSrcCode.Text = src;
+
+                // При необходимости - найти все вхождения искомой строки
+                if (!string.IsNullOrWhiteSpace(m_globalSearchString))
+                {
+                    var findRange = scintillaTextBox.FindReplace.FindAll(m_globalSearchString);
+                    scintillaTextBox.FindReplace.HighlightAll(findRange);
+                    scintillaTextBox.FindReplace.MarkAll(findRange);
+                }
 
                 // обновить иконку объекта после считывания дополнительной информации
                 if (!string.IsNullOrEmpty(objType))
@@ -298,9 +328,16 @@ namespace dbShowDepends
                     e.Node.SelectedImageIndex = getTreeObjColorIndex(objType, true);
                 }
 
+                // Пополнить историю переходов
                 var newName = dbName + "." + objName;
+                if (!string.IsNullOrWhiteSpace(m_globalSearchString))
+                {
+                    newName += ": " + m_globalSearchString;
+                }
+
                 listBoxViewHistory.Items.Add(newName);
 
+                // Строка статуса
                 toolStripStatusLabel1.Text = "Db: " + dbName + ", object: " + objName + ", fullName: " + fullObjName;
             }
             catch (Exception exc)
