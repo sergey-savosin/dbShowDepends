@@ -163,6 +163,7 @@
     <Content Include="findsql.sql" />
     <Content Include="find_weak_objects.sql" />
     <Content Include="Resources\btnSearch.png" />
+    <Content Include="Resources\btnSearchBySource2.png" />
     <Content Include="Resources\btnSearchBySource.png" />
     <Content Include="Support_createTableScript.sql" />
     <Content Include="Support_createTypeTableScript.sql" />

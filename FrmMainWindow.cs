@@ -109,8 +109,8 @@ namespace dbShowDepends
             //init_fctbSrcCode();
             SetLanguage("mssql");
             init_imageList();
-            incrementalSearcher1.Scintilla = scintillaTextBox;
-            incrementalSearcher1.Searcher.AutoPosition = false; // Чтобы элемент не пропадал из тулбара
+            //incrementalSearcher1.Scintilla = scintillaTextBox;
+            //incrementalSearcher1.Searcher.AutoPosition = false; // Чтобы элемент не пропадал из тулбара
         }
         private void SetLanguage(string language)
         {
@@ -293,6 +293,28 @@ namespace dbShowDepends
             }
         }
 
+        // Получить текст объекта и обновить иконку в дереве объектов
+        private string GetObjectSourceText(string fullObjName, string defaultDbName
+            , ref string databaseName
+            , ref string objectName
+            , ref string objectType)
+        {
+            string dbName = "", objName = "", objType = "";
+            parseObjectName(fullObjName, ref dbName, ref objName);
+
+            if (string.IsNullOrWhiteSpace(dbName))
+                dbName = defaultDbName;
+
+            // Получить текст объекта
+            string sourceText = getDbLayer(dbName).GetObjectSource(objName, ref objType);
+
+            // Передача результата
+            databaseName = dbName;
+            objectName = objName;
+            objectType = objType;
+            return sourceText;
+        }
+
         // Отобразить текст выделенного объекта
         private void treeObj_AfterSelect(object sender, TreeViewEventArgs e)
         {
@@ -300,12 +322,7 @@ namespace dbShowDepends
             {
                 string fullObjName = e.Node.Text;
                 string dbName = "", objName = "", objType = "";
-                parseObjectName(fullObjName, ref dbName, ref objName);
-
-                if (string.IsNullOrWhiteSpace(dbName))
-                    dbName = tscbDatabaseName.Text;
-                
-                var src = getDbLayer(dbName).GetObjectSource(objName, ref objType);
+                string src = GetObjectSourceText(fullObjName, tscbDatabaseName.Text, ref dbName, ref objName, ref objType);
 
                 // Вывод текста объекта в текстовый контрол
                 scintillaTextBox.Text = "";
@@ -519,5 +536,48 @@ namespace dbShowDepends
             cbConnection.ComboBox.DisplayMember = "ConnectionName";
         }
 
+        private void listBoxViewHistory_DoubleClick(object sender, EventArgs e)
+        {
+            try
+            {
+                var item = ((ListBox)sender).SelectedItem;
+                if (item == null)
+                    return;
+
+                string selectedText = ((ListBox)sender).SelectedItem.ToString();
+                string fullObjName = "";
+                string textToSearch = "";
+                string dbName = "", objName = "", objType = "";
+
+                var s = selectedText.Split(':');
+                fullObjName = s[0];
+
+                if (s.Length > 1)
+                {
+                    textToSearch = s[1].TrimStart();
+                }
+
+                string src = GetObjectSourceText(fullObjName, tscbDatabaseName.Text, ref dbName, ref objName, ref objType);
+
+                // Вывод текста объекта в текстовый контрол
+                scintillaTextBox.Text = "";
+                scintillaTextBox.Text = src;
+
+                // При необходимости - найти все вхождения искомой строки
+                if (!string.IsNullOrWhiteSpace(textToSearch))
+                {
+                    var findRange = scintillaTextBox.FindReplace.FindAll(textToSearch);
+                    scintillaTextBox.FindReplace.HighlightAll(findRange);
+                    scintillaTextBox.FindReplace.MarkAll(findRange);
+                }
+
+                // Строка статуса
+                toolStripStatusLabel1.Text = "Db: " + dbName + ", object: " + objName + ", fullName: " + fullObjName;
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message, "At ListBoxViewHistory_DoubleClick");
+            }
+        }
     }
 }

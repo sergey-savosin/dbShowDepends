@@ -57,9 +57,8 @@ namespace dbShowDepends
             this.pnlViewHistoryLabel = new System.Windows.Forms.Panel();
             this.labelViewHistory = new System.Windows.Forms.Label();
             this.scintillaTextBox = new ScintillaNET.Scintilla();
-            this.toolStripObjectSource = new System.Windows.Forms.ToolStrip();
-            this.tslObjectSourceText = new System.Windows.Forms.ToolStripLabel();
-            this.incrementalSearcher1 = new ScintillaNET.ToolStripIncrementalSearcher();
+            this.pnlSourceText = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.bsConnections = new System.Windows.Forms.BindingSource(this.components);
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -75,7 +74,7 @@ namespace dbShowDepends
             this.pnlTreeObjLabel.SuspendLayout();
             this.pnlViewHistoryLabel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scintillaTextBox)).BeginInit();
-            this.toolStripObjectSource.SuspendLayout();
+            this.pnlSourceText.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bsConnections)).BeginInit();
             this.SuspendLayout();
             // 
@@ -191,7 +190,7 @@ namespace dbShowDepends
             // tsbSearchBySource
             // 
             this.tsbSearchBySource.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbSearchBySource.Image = global::dbShowDepends.Properties.Resources.btnSearchBySource;
+            this.tsbSearchBySource.Image = global::dbShowDepends.Properties.Resources.btnSearchBySource2;
             this.tsbSearchBySource.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.tsbSearchBySource.Name = "tsbSearchBySource";
             this.tsbSearchBySource.Size = new System.Drawing.Size(23, 22);
@@ -227,7 +226,7 @@ namespace dbShowDepends
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.scintillaTextBox);
-            this.splitContainer1.Panel2.Controls.Add(this.toolStripObjectSource);
+            this.splitContainer1.Panel2.Controls.Add(this.pnlSourceText);
             this.splitContainer1.Size = new System.Drawing.Size(942, 369);
             this.splitContainer1.SplitterDistance = 312;
             this.splitContainer1.TabIndex = 2;
@@ -298,6 +297,7 @@ namespace dbShowDepends
             this.listBoxViewHistory.Name = "listBoxViewHistory";
             this.listBoxViewHistory.Size = new System.Drawing.Size(312, 82);
             this.listBoxViewHistory.TabIndex = 1;
+            this.listBoxViewHistory.DoubleClick += new System.EventHandler(this.listBoxViewHistory_DoubleClick);
             // 
             // pnlViewHistoryLabel
             // 
@@ -313,44 +313,36 @@ namespace dbShowDepends
             this.labelViewHistory.AutoSize = true;
             this.labelViewHistory.Location = new System.Drawing.Point(3, 5);
             this.labelViewHistory.Name = "labelViewHistory";
-            this.labelViewHistory.Size = new System.Drawing.Size(106, 13);
+            this.labelViewHistory.Size = new System.Drawing.Size(243, 13);
             this.labelViewHistory.TabIndex = 0;
-            this.labelViewHistory.Text = "История переходов";
+            this.labelViewHistory.Text = "История переходов (DoubleClick для перехода)";
             // 
             // scintillaTextBox
             // 
             this.scintillaTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scintillaTextBox.Location = new System.Drawing.Point(0, 27);
+            this.scintillaTextBox.Location = new System.Drawing.Point(0, 21);
             this.scintillaTextBox.Name = "scintillaTextBox";
-            this.scintillaTextBox.Size = new System.Drawing.Size(626, 342);
+            this.scintillaTextBox.Size = new System.Drawing.Size(626, 348);
             this.scintillaTextBox.TabIndex = 0;
             this.scintillaTextBox.Text = "select * from ...";
             // 
-            // toolStripObjectSource
+            // pnlSourceText
             // 
-            this.toolStripObjectSource.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStripObjectSource.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tslObjectSourceText,
-            this.incrementalSearcher1});
-            this.toolStripObjectSource.Location = new System.Drawing.Point(0, 0);
-            this.toolStripObjectSource.Name = "toolStripObjectSource";
-            this.toolStripObjectSource.Padding = new System.Windows.Forms.Padding(10, 0, 1, 0);
-            this.toolStripObjectSource.Size = new System.Drawing.Size(626, 27);
-            this.toolStripObjectSource.TabIndex = 1;
-            this.toolStripObjectSource.Text = "toolStripObjectSource";
+            this.pnlSourceText.Controls.Add(this.label1);
+            this.pnlSourceText.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlSourceText.Location = new System.Drawing.Point(0, 0);
+            this.pnlSourceText.Name = "pnlSourceText";
+            this.pnlSourceText.Size = new System.Drawing.Size(626, 21);
+            this.pnlSourceText.TabIndex = 1;
             // 
-            // tslObjectSourceText
+            // label1
             // 
-            this.tslObjectSourceText.Name = "tslObjectSourceText";
-            this.tslObjectSourceText.Size = new System.Drawing.Size(84, 24);
-            this.tslObjectSourceText.Text = "Текст объекта";
-            // 
-            // incrementalSearcher1
-            // 
-            this.incrementalSearcher1.BackColor = System.Drawing.Color.Transparent;
-            this.incrementalSearcher1.Name = "incrementalSearcher1";
-            this.incrementalSearcher1.Scintilla = null;
-            this.incrementalSearcher1.Size = new System.Drawing.Size(262, 24);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 5);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(37, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Текст";
             // 
             // FrmMainWindow
             // 
@@ -373,7 +365,6 @@ namespace dbShowDepends
             this.statusStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
@@ -385,8 +376,8 @@ namespace dbShowDepends
             this.pnlViewHistoryLabel.ResumeLayout(false);
             this.pnlViewHistoryLabel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scintillaTextBox)).EndInit();
-            this.toolStripObjectSource.ResumeLayout(false);
-            this.toolStripObjectSource.PerformLayout();
+            this.pnlSourceText.ResumeLayout(false);
+            this.pnlSourceText.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bsConnections)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -422,9 +413,8 @@ namespace dbShowDepends
         private System.Windows.Forms.ListBox listBoxViewHistory;
         private ScintillaNET.Scintilla scintillaTextBox;
         private System.Windows.Forms.ToolStripButton tsbSearchBySource;
-        private ScintillaNET.ToolStripIncrementalSearcher incrementalSearcher1;
-        private System.Windows.Forms.ToolStrip toolStripObjectSource;
-        private System.Windows.Forms.ToolStripLabel tslObjectSourceText;
+        private System.Windows.Forms.Panel pnlSourceText;
+        private System.Windows.Forms.Label label1;
     }
 }
 
