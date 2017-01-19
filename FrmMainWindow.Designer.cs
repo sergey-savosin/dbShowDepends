@@ -293,11 +293,12 @@ namespace dbShowDepends
             // 
             this.listBoxViewHistory.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBoxViewHistory.FormattingEnabled = true;
+            this.listBoxViewHistory.IntegralHeight = false;
             this.listBoxViewHistory.Location = new System.Drawing.Point(0, 21);
             this.listBoxViewHistory.Name = "listBoxViewHistory";
             this.listBoxViewHistory.Size = new System.Drawing.Size(312, 82);
             this.listBoxViewHistory.TabIndex = 1;
-            this.listBoxViewHistory.DoubleClick += new System.EventHandler(this.listBoxViewHistory_DoubleClick);
+            this.listBoxViewHistory.Click += new System.EventHandler(this.listBoxViewHistory_Click);
             // 
             // pnlViewHistoryLabel
             // 
@@ -313,9 +314,9 @@ namespace dbShowDepends
             this.labelViewHistory.AutoSize = true;
             this.labelViewHistory.Location = new System.Drawing.Point(3, 5);
             this.labelViewHistory.Name = "labelViewHistory";
-            this.labelViewHistory.Size = new System.Drawing.Size(243, 13);
+            this.labelViewHistory.Size = new System.Drawing.Size(209, 13);
             this.labelViewHistory.TabIndex = 0;
-            this.labelViewHistory.Text = "История переходов (DoubleClick для перехода)";
+            this.labelViewHistory.Text = "История переходов (Click для перехода)";
             // 
             // scintillaTextBox
             // 

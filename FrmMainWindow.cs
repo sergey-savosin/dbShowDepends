@@ -353,6 +353,8 @@ namespace dbShowDepends
                 }
 
                 listBoxViewHistory.Items.Add(newName);
+                // Прокрутить к последней строке
+                listBoxViewHistory.SelectedIndex = listBoxViewHistory.Items.Count - 1;
 
                 // Строка статуса
                 toolStripStatusLabel1.Text = "Db: " + dbName + ", object: " + objName + ", fullName: " + fullObjName;
@@ -536,7 +538,7 @@ namespace dbShowDepends
             cbConnection.ComboBox.DisplayMember = "ConnectionName";
         }
 
-        private void listBoxViewHistory_DoubleClick(object sender, EventArgs e)
+        private void listBoxViewHistory_Click(object sender, EventArgs e)
         {
             try
             {

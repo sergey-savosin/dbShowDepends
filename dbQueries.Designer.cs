@@ -266,7 +266,7 @@ namespace dbShowDepends {
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на set nocount on
-        ///--declare @ObjectName sysname = &apos;dbo.Products&apos;
+        ///--declare @ObjectName sysname = &apos;dbo.LicenseActivation20Event&apos;
         ///
         ////* входящие объекты */
         ///declare @objects table (
@@ -284,7 +284,7 @@ namespace dbShowDepends {
         ///	rowtype varchar(50) not null,
         ///	indent int default(0), --отступ при форматировании запроса
         ///	sqltext varchar(max) null,
-        ///	endType tinyint default(0) --тип [остаток строки не уместился]&quot;;.
+        ///	endType tinyint  [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string showTableSource {
             get {

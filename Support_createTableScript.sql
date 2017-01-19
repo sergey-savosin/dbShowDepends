@@ -55,7 +55,7 @@ rownum: 0:4 - параметры до запроса
  ******************************************/
 
 set nocount on
---declare @ObjectName sysname = 'dbo.Products'
+--declare @ObjectName sysname = 'dbo.LicenseActivation20Event'
 
 /* входящие объекты */
 declare @objects table (
@@ -367,6 +367,37 @@ from
 		ON cd.sName = c.sName
 		AND cd.tName = c.tName
 		AND cd.colName = c.colName
+where
+	c.Computed = 0
+
+UNION ALL
+
+select
+	c.sName,
+	c.tName,
+	10 +c.ID,--rowid,
+	'computed columns',
+	1,
+	'[' +c.colName +'] AS ' +
+
+--	[ThreadId] AS ([Id]%(10)+(1)),
+	c.ComputedText + 
+	''
+	 as sqltext,
+	case
+		when c.ID < cols.cnt
+		then 2
+		else 0
+	end as rowEnd
+from
+	#columns c
+	outer apply (
+		select count(1) cnt
+		from sys.all_columns ac (nolock)
+		where ac.object_id = c.objectid
+	) cols
+where
+	c.Computed = 1
 
 --4a. список индексов-ограничений (PK, UI)
 SELECT
@@ -1017,6 +1048,6 @@ order by schemaName, tableName, o.rownum
 
 select [definition] = @v
 
---select *
---from @output
---order by schemaName, tableName, rownum
+select *
+from @output
+order by schemaName, tableName, rownum
