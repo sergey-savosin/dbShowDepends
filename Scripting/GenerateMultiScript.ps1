@@ -18,7 +18,7 @@ $scriptingOptions.FileName = "d:\work\sql\result.sql"
 $scriptingOptions.ToFileOnly = $true
 $scriptingOptions.AppendToFile = $true
 
-# Header: Contents of file
+# Header: Contents of the file
 $strHeader = ("USE " + $databaseName)
 $strHeader = $strHeader + ("`r`n`r`n/* This file contains:`r`n")
 
