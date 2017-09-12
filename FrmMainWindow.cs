@@ -265,11 +265,11 @@ namespace dbShowDepends
             try
             {
                 string fullObjName = e.Node.Text;
-                string dbName = "", objName = "";
+                string dbName = "", objName = "", objTag = (string)e.Node.Tag ?? "";
                 parseObjectName(fullObjName, ref dbName, ref objName);
 
                 if (string.IsNullOrWhiteSpace(dbName))
-                    dbName = tscbDatabaseName.Text;
+                    dbName = objTag;
 
                 var recs = getDbLayer(dbName).GetReferencedObjects(objName);
                 e.Node.Nodes.Clear();
@@ -282,6 +282,7 @@ namespace dbShowDepends
                         str = dbNameChild + '.' + str;
                     }
                     var tn = e.Node.Nodes.Add(str);
+                    tn.Tag = string.IsNullOrEmpty(dbNameChild) ? dbName : dbNameChild;
                     tn.Nodes.Add("to do");
                     tn.ImageIndex = getTreeObjColorIndex(rc["Type"].ToString(), false);
                     tn.SelectedImageIndex = getTreeObjColorIndex(rc["Type"].ToString(), true);
@@ -321,8 +322,8 @@ namespace dbShowDepends
             try
             {
                 string fullObjName = e.Node.Text;
-                string dbName = "", objName = "", objType = "";
-                string src = GetObjectSourceText(fullObjName, tscbDatabaseName.Text, ref dbName, ref objName, ref objType);
+                string dbName = "", objName = "", objType = "", objTag = (string)e.Node.Tag ?? "";
+                string src = GetObjectSourceText(fullObjName, objTag, ref dbName, ref objName, ref objType);
 
                 // Вывод текста объекта в текстовый контрол
                 scintillaTextBox.Text = "";
@@ -345,7 +346,12 @@ namespace dbShowDepends
                     e.Node.SelectedImageIndex = getTreeObjColorIndex(objType, true);
                 }
 
-                // Пополнить историю переходов
+                // Пополнить историю переходов. БД объекта указывается всегда
+                if (string.IsNullOrEmpty(dbName))
+                {
+                    dbName = objTag;
+                }
+
                 var newName = dbName + "." + objName;
                 if (!string.IsNullOrWhiteSpace(m_globalSearchString))
                 {
@@ -357,7 +363,10 @@ namespace dbShowDepends
                 listBoxViewHistory.SelectedIndex = listBoxViewHistory.Items.Count - 1;
 
                 // Строка статуса
-                toolStripStatusLabel1.Text = "Db: " + dbName + ", object: " + objName + ", fullName: " + fullObjName;
+                toolStripStatusLabel1.Text = "Db: " + dbName
+                    + ", tag: " + objTag
+                    + ", object: " + objName
+                    + ", fullName: " + fullObjName;
             }
             catch (Exception exc)
             {
@@ -453,6 +462,7 @@ namespace dbShowDepends
                 {
                     var tn = treeObj.Nodes.Add(r["FullName"].ToString());
                     tn.Nodes.Add("to do");
+                    tn.Tag = tscbDatabaseName.Text; // Tag = current database
                     tn.ImageIndex = getTreeObjColorIndex(r["Type"].ToString(), false);
                     tn.SelectedImageIndex = getTreeObjColorIndex(r["Type"].ToString(), true);
 

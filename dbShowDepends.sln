@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dbShowDepends", "dbShowDepends.csproj", "{1A6C0507-AE5A-40EC-B8C1-C2FA95C73969}"
 EndProject
@@ -14,6 +14,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1A6C0507-AE5A-40EC-B8C1-C2FA95C73969}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{1A6C0507-AE5A-40EC-B8C1-C2FA95C73969}.Debug|Any CPU.Build.0 = Debug|x86
 		{1A6C0507-AE5A-40EC-B8C1-C2FA95C73969}.Debug|x86.ActiveCfg = Debug|x86
 		{1A6C0507-AE5A-40EC-B8C1-C2FA95C73969}.Debug|x86.Build.0 = Debug|x86
 		{1A6C0507-AE5A-40EC-B8C1-C2FA95C73969}.Release|Any CPU.ActiveCfg = Release|x86
@@ -22,5 +23,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E5E2B72E-202F-4C78-A2BC-6A9A5C0D168C}
 	EndGlobalSection
 EndGlobal
