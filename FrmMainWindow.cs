@@ -116,7 +116,13 @@ namespace dbShowDepends
         {
             // Use a built-in lexer and configuration
             scintillaTextBox.ConfigurationManager.Language = language;
-            scintillaTextBox.Margins.Margin0.Width = LINE_NUMBERS_MARGIN_WIDTH;
+            scintillaTextBox.Margins.Margin0.Width = LINE_NUMBERS_MARGIN_WIDTH; /* line numbers */
+            scintillaTextBox.Margins.Margin1.Width = 0; /* marker */
+
+            scintillaTextBox.FindReplace.Marker.Symbol = ScintillaNET.MarkerSymbol.Background;
+            scintillaTextBox.FindReplace.Marker.BackColor = Color.LightSkyBlue;
+            scintillaTextBox.FindReplace.Marker.Alpha = 20;
+            scintillaTextBox.FindReplace.Indicator.Color = Color.Blue;
         }
 
 
