@@ -320,6 +320,9 @@ select
 		when lower(c.DataType)='float'
 		then '(' +cast(c.NumericPrecision as varchar) +') '		
 
+		when lower(c.DataType) = 'datetime2'
+		then '(' + CAST(c.NumericScale as VARCHAR) + ') '
+
 		else ''
 	end +
 	case
