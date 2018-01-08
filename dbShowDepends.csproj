@@ -70,7 +70,9 @@
     <Compile Include="Data\SetupConnection.cs" />
     <Compile Include="Data\SetupConnectionCollection.cs" />
     <Compile Include="dbLayer.cs" />
+    <Compile Include="DbObjectTag.cs" />
     <Compile Include="DbObjectType.cs" />
+    <Compile Include="DbObjectViewHistory.cs" />
     <Compile Include="dbQueries.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -130,6 +132,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="README.md" />
     <None Include="Scripting\GenerateMultiScript.ps1" />
   </ItemGroup>
   <ItemGroup>
