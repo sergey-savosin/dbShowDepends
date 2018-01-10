@@ -57,7 +57,7 @@ namespace dbShowDepends.Settings
                 Registry.SetValue(regPath, "serverPassword", par.ServerPassword);
                 Registry.SetValue(regPath, "dbName", par.DbName);
             }
-            catch (Exception e)
+            catch
             {
                 throw;
                 //return "Error saving setting: " + e.Message;
@@ -88,7 +88,7 @@ namespace dbShowDepends.Settings
                 s = (string)Registry.GetValue(regPath, "dbName", "") ?? "";
                 dbName = s;
             }
-            catch (Exception e)
+            catch
             {
                 throw;// "Error loading setting: " + e.Message;
             }

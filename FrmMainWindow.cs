@@ -88,11 +88,11 @@ namespace dbShowDepends
             if (isPrepareTempTable)
             {
                 _dbLayer.PrepareTempTable();
-                toolStripStatusLabel1.Text = string.Format("Temp table for db {0} prepared", targetDbName);
+                //toolStripStatusLabel1.Text = string.Format("(t.c.d.n.) Temp table for db {0} prepared", targetDbName);
             }
             else
             {
-                toolStripStatusLabel1.Text = string.Format("Changed to db {0}", targetDbName);
+                //toolStripStatusLabel1.Text = string.Format("(t.c.d.n.) Changed to db {0}", targetDbName);
             }
         }
 
@@ -112,6 +112,7 @@ namespace dbShowDepends
             //incrementalSearcher1.Scintilla = scintillaTextBox;
             //incrementalSearcher1.Searcher.AutoPosition = false; // Чтобы элемент не пропадал из тулбара
         }
+
         private void SetLanguage(string language)
         {
             // Use a built-in lexer and configuration
@@ -301,6 +302,7 @@ namespace dbShowDepends
 
 					var tn = e.Node.Nodes.Add(str);
 					tn.Tag = tag;
+                    tn.Name = str;
                     tn.Nodes.Add("to do");
                     tn.ImageIndex = getTreeObjColorIndex(rc["Type"].ToString(), false);
                     tn.SelectedImageIndex = getTreeObjColorIndex(rc["Type"].ToString(), true);
@@ -368,7 +370,7 @@ namespace dbShowDepends
                     e.Node.SelectedImageIndex = getTreeObjColorIndex(objType, true);
                 }
 
-                // Пополнить историю переходов. БД объекта указывается всегда
+                // Информация для отладки
                 if (string.IsNullOrEmpty(dbName))
                 {
                     dbName = tagDatabaseName;
@@ -381,7 +383,7 @@ namespace dbShowDepends
                 }
 
                 // Строка статуса
-                toolStripStatusLabel1.Text = "Db: " + dbName
+                toolStripStatusLabel1.Text = "(a.s.) Db: " + dbName
                     + ", tagDB: " + tagDatabaseName
 					+ ", tagPath: " + tagTreeViewPath
                     //+ ", object: " + objName
@@ -490,6 +492,7 @@ namespace dbShowDepends
 					};
 
                     tn.Tag = tag; // Tag = current database
+                    tn.Name = fullName;
 					tn.Nodes.Add("to do");
 					tn.ImageIndex = getTreeObjColorIndex(r["Type"].ToString(), false);
                     tn.SelectedImageIndex = getTreeObjColorIndex(r["Type"].ToString(), true);
@@ -580,6 +583,7 @@ namespace dbShowDepends
         {
             try
             {
+                // Получить информацию по выделенному элементу истории
                 var item = ((ListBox)sender).SelectedItem;
                 if (item == null)
                     return;
@@ -587,11 +591,13 @@ namespace dbShowDepends
 				DbObjectViewHistory h = (DbObjectViewHistory)item;
 
                 string fullObjName = h.ObjectName;
-				int lineNumber = h.LineNumber;
+				int lineNumber = h.LineNumber -1;
 				string databaseName = h.DatabaseName;
 
                 string textToSearch = h.SearchString;
                 string dbName = "", objName = "", objType = "";
+
+                bool res = TrySearchObjectInTree(h.TreeViewPath);
 
                 string src = GetObjectSourceText(fullObjName, databaseName, ref dbName, ref objName, ref objType);
 
@@ -610,24 +616,47 @@ namespace dbShowDepends
 				// Переход на строку с указанным номером
 				scintillaTextBox.GoTo.Line(lineNumber);
 
-				// ToDo: добавить возможность сохранять текущий объект + номер строки до перехода по истории
-
-				// ToDo: Перемещать фокус в TreeView
-
-                // Строка статуса
-                toolStripStatusLabel1.Text = "Db: " + dbName 
-					//+ ", object: " + objName 
-					+ ", fullName: " + fullObjName
-					+ $", line: {lineNumber}"
-					;
+                // Восстановить фокус в ListBox истории
+                var lb = (ListBox)sender;
+                lb.SelectedItem = item;
             }
             catch (Exception exc)
             {
-                MessageBox.Show(exc.Message, "At ListBoxViewHistory_DoubleClick");
+                MessageBox.Show(exc.Message, "At ListBoxViewHistory_Click");
             }
         }
 
-		private void treeObj_BeforeSelect(object sender, TreeViewCancelEventArgs e)
+        /// <summary>
+        /// Adds DbObject data to history element
+        /// </summary>
+        /// <param name="objTag">TreeView object data</param>
+        /// <param name="fullObjName">TreeView text</param>
+        /// <param name="currentLine">1-based value</param>
+        private void DbObject_AddToHistory(DbObjectTag objTag, string fullObjName, int currentLine)
+        {
+            string tagDatabaseName = objTag?.DatabaseName ?? "";
+            string tagTreeViewPath = objTag?.TreeViewPath ?? "";
+            string tagObjectName = objTag?.ObjectBracketName ?? "n\\a";
+            
+
+            DbObjectViewHistory h = new DbObjectViewHistory()
+            {
+                ObjectName = tagObjectName,
+                DatabaseName = tagDatabaseName,
+                SearchString = m_globalSearchString,
+                TreeViewPath = tagTreeViewPath,
+                LineNumber = currentLine
+            };
+
+            int indexOfElement = listBoxViewHistory.FindStringExact(h.ToString());
+            if (indexOfElement == -1)
+            {
+                listBoxViewHistory.Items.Add(h); //ToDo: посмотреть, как правильно удалять объекты, прицепленные к ListBox
+            }
+
+        }
+
+        private void treeObj_BeforeSelect(object sender, TreeViewCancelEventArgs e)
 		{
 			try
 			{
@@ -637,29 +666,49 @@ namespace dbShowDepends
 
 				string fullObjName = currentNode.Text;
 				DbObjectTag objTag = (DbObjectTag)currentNode.Tag;
-				string tagDatabaseName = objTag?.DatabaseName ?? "";
-				string tagTreeViewPath = objTag?.TreeViewPath ?? "";
-				string tagObjectName = objTag?.ObjectBracketName ?? "n\\a";
-				int lineNumber = scintillaTextBox.Lines.Current.Number +1;
+                int lineNumber = scintillaTextBox.Lines.Current.Number + 1;
 
-				DbObjectViewHistory h = new DbObjectViewHistory()
-				{
-					ObjectName = tagObjectName,
-					DatabaseName = tagDatabaseName,
-					SearchString = m_globalSearchString,
-					TreeViewPath = tagTreeViewPath,
-					LineNumber = lineNumber
-				};
+                DbObject_AddToHistory(objTag, fullObjName, lineNumber);
 
-				listBoxViewHistory.Items.Add(h); //ToDo: посмотреть, как правильно удалять объекты, прицепленные к ListBox
-												 // Прокрутить к последней строке
-				listBoxViewHistory.SelectedIndex = listBoxViewHistory.Items.Count - 1;
+                // Прокрутить к последней строке
+                listBoxViewHistory.SelectedIndex = listBoxViewHistory.Items.Count - 1;
 
-			}
-			catch (Exception ex)
+            }
+            catch (Exception ex)
 			{
 				MessageBox.Show(ex.Message, "At Treeview.BeforeSelect event");
 			}
 		}
-	}
+
+        private bool TrySearchObjectInTree(string ObjectPath)
+        {
+            string[] treeNodes = ObjectPath.Split('\\');
+            // first element - root (\)
+            if (treeNodes.Count() <= 1)
+                return false;
+
+            string firstNode = treeNodes[treeNodes.Count() -1];
+            bool contains = treeObj.Nodes.ContainsKey(firstNode);
+            int firstIndex = treeObj.Nodes.IndexOfKey(firstNode);
+
+            TreeNode[] res = treeObj.Nodes.Find(firstNode, true);
+
+            if (res == null)
+                return false;
+
+            treeObj.SelectedNode = res[0];
+            //if (firstIndex == -1)
+            //{
+            //    MessageBox.Show($"nodes {firstNode} not found", "TrySearchObjectInTree");
+            //    return false;
+            //}
+            //else
+            //{
+            //    TreeNode[] res = treeObj.Nodes.Find(firstNode, false);
+            //    return true;
+            //}
+
+            return true;
+        }
+    }
 }
