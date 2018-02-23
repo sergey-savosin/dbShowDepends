@@ -59,7 +59,7 @@ namespace dbShowDepends
             this.labelViewHistory = new System.Windows.Forms.Label();
             this.scintillaTextBox = new ScintillaNET.Scintilla();
             this.pnlSourceText = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelSourceCaption = new System.Windows.Forms.Label();
             this.bsConnections = new System.Windows.Forms.BindingSource(this.components);
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -342,21 +342,21 @@ namespace dbShowDepends
             // 
             // pnlSourceText
             // 
-            this.pnlSourceText.Controls.Add(this.label1);
+            this.pnlSourceText.Controls.Add(this.labelSourceCaption);
             this.pnlSourceText.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlSourceText.Location = new System.Drawing.Point(0, 0);
             this.pnlSourceText.Name = "pnlSourceText";
             this.pnlSourceText.Size = new System.Drawing.Size(641, 21);
             this.pnlSourceText.TabIndex = 1;
             // 
-            // label1
+            // labelSourceCaption
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 5);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(37, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Текст";
+            this.labelSourceCaption.AutoSize = true;
+            this.labelSourceCaption.Location = new System.Drawing.Point(3, 5);
+            this.labelSourceCaption.Name = "labelSourceCaption";
+            this.labelSourceCaption.Size = new System.Drawing.Size(37, 13);
+            this.labelSourceCaption.TabIndex = 0;
+            this.labelSourceCaption.Text = "Текст";
             // 
             // FrmMainWindow
             // 
@@ -428,7 +428,7 @@ namespace dbShowDepends
         private ScintillaNET.Scintilla scintillaTextBox;
         private System.Windows.Forms.ToolStripButton tsbSearchBySource;
         private System.Windows.Forms.Panel pnlSourceText;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelSourceCaption;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

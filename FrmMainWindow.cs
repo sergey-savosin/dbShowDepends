@@ -20,6 +20,8 @@ namespace dbShowDepends
         private DbLayer _dbLayer;
         private SetupConnectionCollection connectionCollection;
         private string m_globalSearchString;
+        private string m_currentObjectFullName;
+        private string m_currentObjectDatabase;
 
         // БД выбирается из настройки
         private DbLayer getDbLayer()
@@ -352,6 +354,7 @@ namespace dbShowDepends
                 // Вывод текста объекта в текстовый контрол
                 scintillaTextBox.Text = "";
                 scintillaTextBox.Text = src;
+                SetCurrentObjectParams(dbName, objName, objType);
                 //fctbSrcCode.Clear();
                 //fctbSrcCode.Text = src;
 
@@ -604,6 +607,7 @@ namespace dbShowDepends
                 // Вывод текста объекта в текстовый контрол
                 scintillaTextBox.Text = "";
                 scintillaTextBox.Text = src;
+                SetCurrentObjectParams(dbName, objName, objType);
 
                 // При необходимости - найти все вхождения искомой строки
                 if (!string.IsNullOrWhiteSpace(textToSearch))
@@ -693,8 +697,12 @@ namespace dbShowDepends
 
             TreeNode[] res = treeObj.Nodes.Find(firstNode, true);
 
-            if (res == null)
+            // ToDo: если в дереве ничего не найдено, то надо его заново построить.
+            if ((res == null) || (res.Count() == 0))
+            {
+                toolStripStatusLabel1.Text = $"node '{firstNode}' not found in tree";
                 return false;
+            }
 
             treeObj.SelectedNode = res[0];
             //if (firstIndex == -1)
@@ -709,6 +717,21 @@ namespace dbShowDepends
             //}
 
             return true;
+        }
+
+        /// <summary>
+        /// Установить параметры объекта в нужные переменные
+        /// </summary>
+        /// <param name="dbName">Database name</param>
+        /// <param name="objName">Object full name</param>
+        /// <param name="objType">Object type</param>
+        private void SetCurrentObjectParams(string dbName, string objName, string objType)
+        {
+            labelSourceCaption.Text = $"Объект {DbObjectTypes.GetObjectTypeText(objType).ToLower()}: {dbName}.{objName}";
+            m_currentObjectDatabase = dbName;
+            m_currentObjectFullName = objName;
+
+            // Добавить или обновить историю для объекта
         }
     }
 }
