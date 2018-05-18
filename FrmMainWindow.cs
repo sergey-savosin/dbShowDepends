@@ -1,6 +1,8 @@
-﻿using System;
+﻿using ScintillaNET;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Data.Common;
@@ -8,7 +10,6 @@ using System.Diagnostics;
 //using FastColoredTextBoxNS;
 using dbShowDepends.Data;
 using dbShowDepends.Settings;
-
 
 namespace dbShowDepends
 {
@@ -98,6 +99,8 @@ namespace dbShowDepends
             }
         }
 
+        ScintillaNET.Scintilla scintillaTextBox;
+
         public FrmMainWindow()
         {
             InitializeComponent();
@@ -109,7 +112,6 @@ namespace dbShowDepends
             //cbConnection.ComboBox.Width *= 2;
 
             //init_fctbSrcCode();
-            SetLanguage("mssql");
             init_imageList();
             //incrementalSearcher1.Scintilla = scintillaTextBox;
             //incrementalSearcher1.Searcher.AutoPosition = false; // Чтобы элемент не пропадал из тулбара
@@ -117,25 +119,143 @@ namespace dbShowDepends
 
         private void SetLanguage(string language)
         {
-            // Use a built-in lexer and configuration
-            scintillaTextBox.ConfigurationManager.Language = language;
-            scintillaTextBox.Margins.Margin0.Width = LINE_NUMBERS_MARGIN_WIDTH; /* line numbers */
-            scintillaTextBox.Margins.Margin1.Width = 5; /* marker */
+            //scintillaTextBox.Lexing.LexerLanguageMap["NewStyle"] = "mssql";
+            //scintillaTextBox.ConfigurationManager.CustomLocation = Path.GetFullPath("NewStyle.xml");
+            //language = "NewStyle";
 
-            scintillaTextBox.FindReplace.Marker.Symbol = ScintillaNET.MarkerSymbol.Background;
-            scintillaTextBox.FindReplace.Marker.BackColor = Color.Blue;
-            scintillaTextBox.FindReplace.Marker.Alpha = 30;
-            scintillaTextBox.FindReplace.Indicator.Color = Color.Blue;
+            // Use a built-in lexer and configuration
+            scintillaTextBox.LexerLanguage = language;
+            scintillaTextBox.Margins[0].Width = LINE_NUMBERS_MARGIN_WIDTH;
+            //scintillaTextBox.Margins.Margin0.Width = LINE_NUMBERS_MARGIN_WIDTH; /* line numbers */
+            scintillaTextBox.Margins[1].Width = 5;
+            //scintillaTextBox.Margins.Margin1.Width = 5; /* marker */
+
+            //scintillaTextBox.ConfigurationManager.Configure();
+
+            //scintillaTextBox.FindReplace.Marker.Symbol = ScintillaNET.MarkerSymbol.Background;
+            //scintillaTextBox.FindReplace.Marker.BackColor = Color.Blue;
+            //scintillaTextBox.FindReplace.Marker.Alpha = 30;
+            //scintillaTextBox.FindReplace.Indicator.Color = Color.Blue;
         }
 
+        public static Color IntToColor(int rgb)
+        {
+            return Color.FromArgb(255, (byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb);
+        }
 
         private void FrmMainWindow_Load(object sender, EventArgs e)
         {
+            // CREATE CONTROL
+            scintillaTextBox = new ScintillaNET.Scintilla();
+            panelScintilla.Controls.Add(scintillaTextBox);
+
+            // BASIC CONFIG
+            scintillaTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            scintillaTextBox.TextChanged += (this.OnTextChanged);
+
+            // INITIAL VIEW CONFIG
+            scintillaTextBox.WrapMode = WrapMode.None;
+            scintillaTextBox.IndentationGuides = IndentView.LookBoth;
+
+            // STYLING
+            InitColors();
+            InitSyntaxColoring(isDarkTheme: false);
+
+            //--SetLanguage("mssql");
+
+            // NUMBER MARGIN
+            //InitNumberMargin();
+
+            // BOOKMARK MARGIN
+            //InitBookmarkMargin();
+
+            // CODE FOLDING MARGIN
+            //InitCodeFolding();
+
+            // DRAG DROP
+            //InitDragDropFile();
+
+            // DEFAULT FILE
+            //LoadDataFromFile("../../MainForm.cs");
+            scintillaTextBox.Text = "select * from @table;\r\n" +
+            "\"hello\"\r\n" +
+            "'test'";
+
+            // INIT HOTKEYS
+            //InitHotkeys();
+
             LoadBsConnections();
 
             var dbParams = SettingLayer.LoadDefaultParams();
             cbConnection.Text = dbParams.ServerName;
             tscbDatabaseName.Text = dbParams.DbName;
+
+        }
+        private void InitHotkeys()
+        {
+
+            // register the hotkeys with the form
+            //HotKeyManager.AddHotKey(this, OpenSearch, Keys.F, true);
+            //HotKeyManager.AddHotKey(this, CloseSearch, Keys.Escape);
+
+            // remove conflicting hotkeys from scintilla
+            scintillaTextBox.ClearCmdKey(Keys.Control | Keys.F);
+
+        }
+
+        private void InitColors()
+        {
+            scintillaTextBox.SetSelectionBackColor(true, IntToColor(0x114D9C));
+        }
+
+        private void InitSyntaxColoring(bool isDarkTheme)
+        {
+            // Configure the default style
+
+            if (isDarkTheme)
+            {
+                scintillaTextBox.StyleResetDefault();
+                scintillaTextBox.Styles[Style.Default].Font = "Consolas";
+                scintillaTextBox.Styles[Style.Default].Size = 10;
+                scintillaTextBox.Styles[Style.Default].BackColor = IntToColor(0x212121);
+                scintillaTextBox.Styles[Style.Default].ForeColor = IntToColor(0xFFFFFF);
+            }
+            //else
+            //{
+            //    scintillaTextBox.Styles[Style.Default].BackColor = IntToColor(0xFFFFFF);
+            //    scintillaTextBox.Styles[Style.Default].ForeColor = IntToColor(0x212121);
+            //}
+
+            if (isDarkTheme)
+            {
+                scintillaTextBox.StyleClearAll();
+                // Configure the CPP (C#) lexer styles
+                scintillaTextBox.Styles[Style.Sql.Identifier].ForeColor = IntToColor(0xD0DAE2);
+                scintillaTextBox.Styles[Style.Sql.Comment].ForeColor = IntToColor(0xBD758B);
+                scintillaTextBox.Styles[Style.Sql.CommentLine].ForeColor = IntToColor(0x40BF57);
+                scintillaTextBox.Styles[Style.Sql.CommentDoc].ForeColor = IntToColor(0x2FAE35);
+                scintillaTextBox.Styles[Style.Sql.Number].ForeColor = IntToColor(0xFFFF00);
+                scintillaTextBox.Styles[Style.Sql.String].ForeColor = IntToColor(0xFFFF00);
+                scintillaTextBox.Styles[Style.Sql.Character].ForeColor = IntToColor(0xE95454);
+                scintillaTextBox.Styles[Style.Sql.Operator].ForeColor = IntToColor(0xE0E0E0);
+                scintillaTextBox.Styles[Style.Sql.CommentLineDoc].ForeColor = IntToColor(0x77A7DB);
+                scintillaTextBox.Styles[Style.Sql.Word].ForeColor = IntToColor(0x48A8EE);
+                scintillaTextBox.Styles[Style.Sql.Word2].ForeColor = IntToColor(0xF98906);
+                scintillaTextBox.Styles[Style.Sql.CommentDocKeyword].ForeColor = IntToColor(0xB3D991);
+                scintillaTextBox.Styles[Style.Sql.CommentDocKeywordError].ForeColor = IntToColor(0xFF0000);
+
+            }
+
+            //scintillaTextBox.Lexer = Lexer.Sql;
+            scintillaTextBox.LexerLanguage = "mssql";
+
+            //scintillaTextBox.SetKeywords(0, "class extends implements import interface new case do while else if for in switch throw get set function var try catch finally while with default break continue delete return each const namespace package include use is as instanceof typeof author copy default deprecated eventType example exampleText exception haxe inheritDoc internal link mtasc mxmlc param private return see serial serialData serialField since throws usage version langversion playerversion productversion dynamic private public partial static intrinsic internal native override protected AS3 final super this arguments null Infinity NaN undefined true false abstract as base bool break by byte case catch char checked class const continue decimal default delegate do double descending explicit event extern else enum false finally fixed float for foreach from goto group if implicit in int interface internal into is lock long new null namespace object operator out override orderby params private protected public readonly ref return switch struct sbyte sealed short sizeof stackalloc static string select this throw true try typeof uint ulong unchecked unsafe ushort using var virtual volatile void while where yield");
+            //scintillaTextBox.SetKeywords(1, "void Null ArgumentError arguments Array Boolean Class Date DefinitionError Error EvalError Function int Math Namespace Number Object RangeError ReferenceError RegExp SecurityError String SyntaxError TypeError uint XML XMLList Boolean Byte Char DateTime Decimal Double Int16 Int32 Int64 IntPtr SByte Single UInt16 UInt32 UInt64 UIntPtr Void Path File System Windows Forms ScintillaNET");
+
+        }
+
+        private void OnTextChanged(object sender, EventArgs e)
+        {
 
         }
 
@@ -359,12 +479,12 @@ namespace dbShowDepends
                 //fctbSrcCode.Text = src;
 
                 // При необходимости - найти все вхождения искомой строки
-                if (!string.IsNullOrWhiteSpace(m_globalSearchString))
-                {
-                    var findRange = scintillaTextBox.FindReplace.FindAll(m_globalSearchString);
-                    scintillaTextBox.FindReplace.HighlightAll(findRange);
-                    scintillaTextBox.FindReplace.MarkAll(findRange);
-                }
+                //if (!string.IsNullOrWhiteSpace(m_globalSearchString))
+                //{
+                //    var findRange = scintillaTextBox.FindReplace.FindAll(m_globalSearchString);
+                //    scintillaTextBox.FindReplace.HighlightAll(findRange);
+                //    scintillaTextBox.FindReplace.MarkAll(findRange);
+                //}
 
                 // обновить иконку объекта после считывания дополнительной информации
                 if (!string.IsNullOrEmpty(objType))
@@ -610,15 +730,15 @@ namespace dbShowDepends
                 SetCurrentObjectParams(dbName, objName, objType);
 
                 // При необходимости - найти все вхождения искомой строки
-                if (!string.IsNullOrWhiteSpace(textToSearch))
-                {
-                    var findRange = scintillaTextBox.FindReplace.FindAll(textToSearch);
-                    scintillaTextBox.FindReplace.HighlightAll(findRange);
-                    scintillaTextBox.FindReplace.MarkAll(findRange);
-                }
+                //if (!string.IsNullOrWhiteSpace(textToSearch))
+                //{
+                //    var findRange = scintillaTextBox.FindReplace.FindAll(textToSearch);
+                //    scintillaTextBox.FindReplace.HighlightAll(findRange);
+                //    scintillaTextBox.FindReplace.MarkAll(findRange);
+                //}
 
 				// Переход на строку с указанным номером
-				scintillaTextBox.GoTo.Line(lineNumber);
+				//scintillaTextBox.GoTo.Line(lineNumber);
 
                 // Восстановить фокус в ListBox истории
                 var lb = (ListBox)sender;
@@ -670,7 +790,7 @@ namespace dbShowDepends
 
 				string fullObjName = currentNode.Text;
 				DbObjectTag objTag = (DbObjectTag)currentNode.Tag;
-                int lineNumber = scintillaTextBox.Lines.Current.Number + 1;
+                int lineNumber = 0;// scintillaTextBox.Lines.Current.Number + 1;
 
                 DbObject_AddToHistory(objTag, fullObjName, lineNumber);
 
@@ -732,6 +852,16 @@ namespace dbShowDepends
             m_currentObjectFullName = objName;
 
             // Добавить или обновить историю для объекта
+        }
+
+        private void lightToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InitSyntaxColoring(isDarkTheme: false);
+        }
+
+        private void darkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InitSyntaxColoring(isDarkTheme: true);
         }
     }
 }

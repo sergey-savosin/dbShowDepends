@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ScintillaNET>
+
+  <Language Name="NewStyle">
+    <Indentation TabWidth="4"/>
+    <Lexer LineCommentPrefix=";" >
+      <Keywords List="0" Inherit="False">
+        adc adc and asl bcc bcs beq bit bmi bne bpl
+        bra brk brl bvc bvs clc cld cli clv cmp cop
+        cpx cpy dec dex dey eor inc inx iny jmp jsr
+        lda ldx ldy lsr mvn mvp nop ora pea pei per
+        pha phb phd phk php phx phy pla plb pld plp
+        plx ply rep rol ror rti rtl rts sbc sec sed
+        sei sep sta stp stx sty stz tax tay tcd tcs
+        tdc trb tsb tsc tsx txa txs txy tya tyx wai
+        wdm xba xce
+      </Keywords>
+    </Lexer>
+    <Styles>
+      <Style Name="CHARACTER" ForeColor="#00AAFF"/>
+      <Style Name="NUMBER" ForeColor="#00AA00"/>
+    </Styles>
+  </Language>
+</ScintillaNET>

@@ -57,10 +57,13 @@ namespace dbShowDepends
             this.listBoxViewHistory = new System.Windows.Forms.ListBox();
             this.pnlViewHistoryLabel = new System.Windows.Forms.Panel();
             this.labelViewHistory = new System.Windows.Forms.Label();
-            this.scintillaTextBox = new ScintillaNET.Scintilla();
             this.pnlSourceText = new System.Windows.Forms.Panel();
             this.labelSourceCaption = new System.Windows.Forms.Label();
             this.bsConnections = new System.Windows.Forms.BindingSource(this.components);
+            this.panelScintilla = new System.Windows.Forms.Panel();
+            this.textToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.darkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -74,7 +77,6 @@ namespace dbShowDepends
             this.splitContainer2.SuspendLayout();
             this.pnlTreeObjLabel.SuspendLayout();
             this.pnlViewHistoryLabel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.scintillaTextBox)).BeginInit();
             this.pnlSourceText.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bsConnections)).BeginInit();
             this.SuspendLayout();
@@ -82,7 +84,8 @@ namespace dbShowDepends
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.actionsToolStripMenuItem});
+            this.actionsToolStripMenuItem,
+            this.textToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(963, 24);
@@ -237,7 +240,7 @@ namespace dbShowDepends
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.scintillaTextBox);
+            this.splitContainer1.Panel2.Controls.Add(this.panelScintilla);
             this.splitContainer1.Panel2.Controls.Add(this.pnlSourceText);
             this.splitContainer1.Size = new System.Drawing.Size(963, 369);
             this.splitContainer1.SplitterDistance = 318;
@@ -331,15 +334,6 @@ namespace dbShowDepends
             this.labelViewHistory.TabIndex = 0;
             this.labelViewHistory.Text = "История переходов (Click для перехода)";
             // 
-            // scintillaTextBox
-            // 
-            this.scintillaTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scintillaTextBox.Location = new System.Drawing.Point(0, 21);
-            this.scintillaTextBox.Name = "scintillaTextBox";
-            this.scintillaTextBox.Size = new System.Drawing.Size(641, 348);
-            this.scintillaTextBox.TabIndex = 0;
-            this.scintillaTextBox.Text = "select * from ...";
-            // 
             // pnlSourceText
             // 
             this.pnlSourceText.Controls.Add(this.labelSourceCaption);
@@ -357,6 +351,37 @@ namespace dbShowDepends
             this.labelSourceCaption.Size = new System.Drawing.Size(37, 13);
             this.labelSourceCaption.TabIndex = 0;
             this.labelSourceCaption.Text = "Текст";
+            // 
+            // panelScintilla
+            // 
+            this.panelScintilla.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelScintilla.Location = new System.Drawing.Point(0, 21);
+            this.panelScintilla.Name = "panelScintilla";
+            this.panelScintilla.Size = new System.Drawing.Size(641, 348);
+            this.panelScintilla.TabIndex = 2;
+            // 
+            // textToolStripMenuItem
+            // 
+            this.textToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lightToolStripMenuItem,
+            this.darkToolStripMenuItem});
+            this.textToolStripMenuItem.Name = "textToolStripMenuItem";
+            this.textToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+            this.textToolStripMenuItem.Text = "Text";
+            // 
+            // lightToolStripMenuItem
+            // 
+            this.lightToolStripMenuItem.Name = "lightToolStripMenuItem";
+            this.lightToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.lightToolStripMenuItem.Text = "Light";
+            this.lightToolStripMenuItem.Click += new System.EventHandler(this.lightToolStripMenuItem_Click);
+            // 
+            // darkToolStripMenuItem
+            // 
+            this.darkToolStripMenuItem.Name = "darkToolStripMenuItem";
+            this.darkToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.darkToolStripMenuItem.Text = "Dark";
+            this.darkToolStripMenuItem.Click += new System.EventHandler(this.darkToolStripMenuItem_Click);
             // 
             // FrmMainWindow
             // 
@@ -389,7 +414,6 @@ namespace dbShowDepends
             this.pnlTreeObjLabel.PerformLayout();
             this.pnlViewHistoryLabel.ResumeLayout(false);
             this.pnlViewHistoryLabel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.scintillaTextBox)).EndInit();
             this.pnlSourceText.ResumeLayout(false);
             this.pnlSourceText.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bsConnections)).EndInit();
@@ -425,11 +449,14 @@ namespace dbShowDepends
         private System.Windows.Forms.Panel pnlViewHistoryLabel;
         private System.Windows.Forms.Label labelViewHistory;
         private System.Windows.Forms.ListBox listBoxViewHistory;
-        private ScintillaNET.Scintilla scintillaTextBox;
         private System.Windows.Forms.ToolStripButton tsbSearchBySource;
         private System.Windows.Forms.Panel pnlSourceText;
         private System.Windows.Forms.Label labelSourceCaption;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.Panel panelScintilla;
+        private System.Windows.Forms.ToolStripMenuItem textToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lightToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem darkToolStripMenuItem;
     }
 }
 
