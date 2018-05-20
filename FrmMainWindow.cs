@@ -18,6 +18,25 @@ namespace dbShowDepends
         //MarkerStyle SameWordsStyle = new MarkerStyle(new SolidBrush(Color.FromArgb(40, Color.Gray)));
         private const int LINE_NUMBERS_MARGIN_WIDTH = 35; // TODO Don't hardcode this
 
+        private const int SCLEX_MSSQL = 55;
+        private const int SCE_MSSQL_DEFAULT = 0;
+        private const int SCE_MSSQL_COMMENT = 1;
+        private const int SCE_MSSQL_LINE_COMMENT = 2;
+        private const int SCE_MSSQL_NUMBER = 3;
+        private const int SCE_MSSQL_STRING = 4;
+        private const int SCE_MSSQL_OPERATOR = 5;
+        private const int SCE_MSSQL_IDENTIFIER = 6;
+        private const int SCE_MSSQL_VARIABLE = 7;
+        private const int SCE_MSSQL_COLUMN_NAME = 8;
+        private const int SCE_MSSQL_STATEMENT = 9;
+        private const int SCE_MSSQL_DATATYPE = 10;
+        private const int SCE_MSSQL_SYSTABLE = 11;
+        private const int SCE_MSSQL_GLOBAL_VARIABLE = 12;
+        private const int SCE_MSSQL_FUNCTION = 13;
+        private const int SCE_MSSQL_STORED_PROCEDURE = 14;
+        private const int SCE_MSSQL_DEFAULT_PREF_DATATYPE = 15;
+        private const int SCE_MSSQL_COLUMN_NAME_2 = 16;
+
         private DbLayer _dbLayer;
         private SetupConnectionCollection connectionCollection;
         private string m_globalSearchString;
@@ -159,7 +178,9 @@ namespace dbShowDepends
 
             // STYLING
             InitColors();
-            InitSyntaxColoring(isDarkTheme: false);
+            scintillaTextBox.Lexer = (Lexer)SCLEX_MSSQL;
+
+            //InitSyntaxColoring(isDarkTheme: true);
 
             //--SetLanguage("mssql");
 
@@ -177,9 +198,8 @@ namespace dbShowDepends
 
             // DEFAULT FILE
             //LoadDataFromFile("../../MainForm.cs");
-            scintillaTextBox.Text = "select * from @table;\r\n" +
-            "\"hello\"\r\n" +
-            "'test'";
+            scintillaTextBox.Text = "select * from @table;\r\n" +"\"hello\"\r\n" +"'test'";
+            scintillaTextBox.Text = dbQueries.getObjectType;
 
             // INIT HOTKEYS
             //InitHotkeys();
@@ -220,38 +240,71 @@ namespace dbShowDepends
                 scintillaTextBox.Styles[Style.Default].BackColor = IntToColor(0x212121);
                 scintillaTextBox.Styles[Style.Default].ForeColor = IntToColor(0xFFFFFF);
             }
-            //else
-            //{
-            //    scintillaTextBox.Styles[Style.Default].BackColor = IntToColor(0xFFFFFF);
-            //    scintillaTextBox.Styles[Style.Default].ForeColor = IntToColor(0x212121);
-            //}
+            else
+            {
+                scintillaTextBox.StyleResetDefault();
+                scintillaTextBox.Styles[Style.Default].Font = "Courier New";
+                scintillaTextBox.Styles[Style.Default].Size = 10;
+            }
+
+            // Set the SQL Lexer
+            //scintillaTextBox.Lexer = Lexer.Sql;
+            scintillaTextBox.Lexer = (Lexer)SCLEX_MSSQL;
+            // Show line numbers
+            scintillaTextBox.Margins[0].Width = 20;
+
+            //scintillaTextBox.LexerLanguage = "mssql";
 
             if (isDarkTheme)
             {
                 scintillaTextBox.StyleClearAll();
                 // Configure the CPP (C#) lexer styles
-                scintillaTextBox.Styles[Style.Sql.Identifier].ForeColor = IntToColor(0xD0DAE2);
-                scintillaTextBox.Styles[Style.Sql.Comment].ForeColor = IntToColor(0xBD758B);
-                scintillaTextBox.Styles[Style.Sql.CommentLine].ForeColor = IntToColor(0x40BF57);
-                scintillaTextBox.Styles[Style.Sql.CommentDoc].ForeColor = IntToColor(0x2FAE35);
-                scintillaTextBox.Styles[Style.Sql.Number].ForeColor = IntToColor(0xFFFF00);
-                scintillaTextBox.Styles[Style.Sql.String].ForeColor = IntToColor(0xFFFF00);
-                scintillaTextBox.Styles[Style.Sql.Character].ForeColor = IntToColor(0xE95454);
-                scintillaTextBox.Styles[Style.Sql.Operator].ForeColor = IntToColor(0xE0E0E0);
-                scintillaTextBox.Styles[Style.Sql.CommentLineDoc].ForeColor = IntToColor(0x77A7DB);
-                scintillaTextBox.Styles[Style.Sql.Word].ForeColor = IntToColor(0x48A8EE);
-                scintillaTextBox.Styles[Style.Sql.Word2].ForeColor = IntToColor(0xF98906);
-                scintillaTextBox.Styles[Style.Sql.CommentDocKeyword].ForeColor = IntToColor(0xB3D991);
-                scintillaTextBox.Styles[Style.Sql.CommentDocKeywordError].ForeColor = IntToColor(0xFF0000);
-
+                scintillaTextBox.Styles[SCE_MSSQL_IDENTIFIER].ForeColor = IntToColor(0xD0DAE2);
+                scintillaTextBox.Styles[SCE_MSSQL_COMMENT].ForeColor = IntToColor(0xBD758B);
+                scintillaTextBox.Styles[SCE_MSSQL_NUMBER].ForeColor = IntToColor(0xFFFF00);
+                scintillaTextBox.Styles[SCE_MSSQL_STRING].ForeColor = Color.LightGreen;// IntToColor(0xFFFF00);
+                scintillaTextBox.Styles[SCE_MSSQL_OPERATOR].ForeColor = IntToColor(0xE0E0E0);
+                // word 0
+                scintillaTextBox.Styles[SCE_MSSQL_STATEMENT].ForeColor = IntToColor(0x48A8EE);
+                // ?
+                scintillaTextBox.Styles[SCE_MSSQL_COLUMN_NAME].ForeColor = IntToColor(0xF98906);
+                // ?
+                scintillaTextBox.Styles[SCE_MSSQL_COLUMN_NAME_2].ForeColor = Color.Green;// IntToColor(0xF98906);
+                // word 2
+                scintillaTextBox.Styles[SCE_MSSQL_DATATYPE].ForeColor = Color.Red;
+                // user 1
+                scintillaTextBox.Styles[SCE_MSSQL_FUNCTION].ForeColor = Color.Blue;
+                scintillaTextBox.Styles[SCE_MSSQL_GLOBAL_VARIABLE].ForeColor = Color.Yellow;
+            }
+            else
+            {
+                scintillaTextBox.StyleClearAll();
+                // Set the Styles
+                scintillaTextBox.Styles[Style.LineNumber].ForeColor = Color.FromArgb(255, 128, 128, 128);  //Dark Gray
+                scintillaTextBox.Styles[Style.LineNumber].BackColor = Color.FromArgb(255, 228, 228, 228);  //Light Gray
+                scintillaTextBox.Styles[Style.Sql.Comment].ForeColor = Color.Green;
+                scintillaTextBox.Styles[Style.Sql.CommentLine].ForeColor = Color.Green;
+                scintillaTextBox.Styles[Style.Sql.CommentLineDoc].ForeColor = Color.Green;
+                scintillaTextBox.Styles[Style.Sql.Number].ForeColor = Color.Maroon;
+                scintillaTextBox.Styles[Style.Sql.Word].ForeColor = Color.Blue;
+                scintillaTextBox.Styles[Style.Sql.SqlPlusPrompt].ForeColor = Color.Blue;
+                scintillaTextBox.Styles[Style.Sql.Word2].ForeColor = Color.Fuchsia;
+                scintillaTextBox.Styles[Style.Sql.User1].ForeColor = Color.Gray;
+                scintillaTextBox.Styles[Style.Sql.User2].ForeColor = Color.FromArgb(255, 00, 128, 192);    //Medium Blue-Green
+                //scintillaTextBox.Styles[Style.Sql.String].ForeColor = Color.Red;
+                scintillaTextBox.Styles[Style.Sql.Character].ForeColor = Color.Red;
+                scintillaTextBox.Styles[Style.Sql.Operator].ForeColor = Color.Black;
             }
 
-            //scintillaTextBox.Lexer = Lexer.Sql;
-            scintillaTextBox.LexerLanguage = "mssql";
-
-            //scintillaTextBox.SetKeywords(0, "class extends implements import interface new case do while else if for in switch throw get set function var try catch finally while with default break continue delete return each const namespace package include use is as instanceof typeof author copy default deprecated eventType example exampleText exception haxe inheritDoc internal link mtasc mxmlc param private return see serial serialData serialField since throws usage version langversion playerversion productversion dynamic private public partial static intrinsic internal native override protected AS3 final super this arguments null Infinity NaN undefined true false abstract as base bool break by byte case catch char checked class const continue decimal default delegate do double descending explicit event extern else enum false finally fixed float for foreach from goto group if implicit in int interface internal into is lock long new null namespace object operator out override orderby params private protected public readonly ref return switch struct sbyte sealed short sizeof stackalloc static string select this throw true try typeof uint ulong unchecked unsafe ushort using var virtual volatile void while where yield");
-            //scintillaTextBox.SetKeywords(1, "void Null ArgumentError arguments Array Boolean Class Date DefinitionError Error EvalError Function int Math Namespace Number Object RangeError ReferenceError RegExp SecurityError String SyntaxError TypeError uint XML XMLList Boolean Byte Char DateTime Decimal Double Int16 Int32 Int64 IntPtr SByte Single UInt16 UInt32 UInt64 UIntPtr Void Path File System Windows Forms ScintillaNET");
-
+            // Set keyword lists
+            // Word = 0
+            scintillaTextBox.SetKeywords(0, @"add alter as authorization backup begin bigint binary bit break browse bulk by cascade case catch check checkpoint close clustered column commit compute constraint containstable continue create current cursor cursor database date datetime datetime2 datetimeoffset dbcc deallocate decimal declare default delete deny desc disk distinct distributed double drop dump else end errlvl escape except exec execute exit external fetch file fillfactor float for foreign freetext freetexttable from full function goto grant group having hierarchyid holdlock identity identity_insert identitycol if image index insert int intersect into key kill lineno load merge money national nchar nocheck nocount nolock nonclustered ntext numeric nvarchar of off offsets on open opendatasource openquery openrowset openxml option order over percent plan precision primary print proc procedure public raiserror read readtext real reconfigure references replication restore restrict return revert revoke rollback rowcount rowguidcol rule save schema securityaudit select set setuser shutdown smalldatetime smallint smallmoney sql_variant statistics table table tablesample text textsize then time timestamp tinyint to top tran transaction trigger truncate try union unique uniqueidentifier update updatetext use user values varbinary varchar varying view waitfor when where while with writetext xml go ");
+            // Word2 = 1
+            scintillaTextBox.SetKeywords(1, @"ascii cast char charindex ceiling coalesce collate contains convert current_date current_time current_timestamp current_user floor isnull max min nullif object_id session_user substring system_user tsequal ltrim rtrim trim schema_name");
+            // User1 = 4
+            scintillaTextBox.SetKeywords(4, @"all and any between cross exists in inner is join left like not null or outer pivot right some unpivot ( ) * ");
+            // User2 = 5
+            scintillaTextBox.SetKeywords(5, @"sys objects sysobjects ");
         }
 
         private void OnTextChanged(object sender, EventArgs e)
