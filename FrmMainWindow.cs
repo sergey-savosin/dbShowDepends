@@ -176,10 +176,16 @@ namespace dbShowDepends
                     switch (objType)
                     {
                         case "P":
-                            brush = Brushes.GreenYellow;
+                            brush = Brushes.YellowGreen;
+                            break;
+                        case "V":
+                            brush = Brushes.LightGoldenrodYellow;
                             break;
                         case "U":
                             brush = Brushes.Pink;
+                            break;
+                        case "TR":
+                            brush = Brushes.LightBlue;
                             break;
                         default:
                             brush = Brushes.White;
